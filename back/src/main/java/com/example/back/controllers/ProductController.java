@@ -40,10 +40,16 @@ public class ProductController {
 	public ProductDTO update(@PathVariable String id, @Validated @RequestBody ProductDTO p) {
 		return repository.save(p);
 	}
-
+	
+	@GetMapping("/product/dato/{id}")
+	public ProductDTO get(@PathVariable String id) {
+		return repository.findById(id).get();
+	}
+	
 	@DeleteMapping("/product/{id}")
-	public void delete(@PathVariable String id) {
+	public String delete(@PathVariable String id) {
 		repository.deleteById(id);
+		return "delete";
 	}
 	
 }

@@ -1,11 +1,16 @@
 package com.example.back.controllers;
 
+import java.io.Console;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.mapping.MongoSimpleTypes;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,10 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.back.models.ConsumerDTO;
 import com.example.back.models.OrderDTO;
 import com.example.back.models.ProductDTO;
+import com.example.back.models.status;
 import com.example.back.repositories.OrderDAO;
 import com.example.back.repositories.ProductDAO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 @RestController
@@ -31,16 +41,44 @@ public class OrderController {
 
 	@Autowired
 	private OrderDAO repository;
+	@Resource
 	private ProductDAO repositoryProductDAO;
 
 	@PostMapping("/order")
-	public OrderDTO create(@Validated @RequestBody OrderDTO o) {
-		return repository.insert(o);
+	public OrderDTO create(@Validated @RequestBody String json) {
+	
+		ObjectMapper objectMapper = new ObjectMapper();
+		
+		try {
+			
+			JsonNode jsonNode = objectMapper.readTree(json);
+			OrderDTO orderDTO = new OrderDTO();
+			ConsumerDTO consumerDTO = new ConsumerDTO();
+			
+			consumerDTO.set_id(jsonNode.get("consumer").get("_id").asText());
+			consumerDTO.setName(jsonNode.get("consumer").get("name").asText());
+			
+			orderDTO.setConsumer(consumerDTO);
+			orderDTO.setOrder_number(jsonNode.get("order_number").asInt());
+			orderDTO.setOrder_status(status.valueOf(jsonNode.get("order_status").asText()));
+			
+			return repository.insert(orderDTO);
+			
+		} catch (JsonProcessingException e) {
+			return null;
+		}
 	}
 
 	@GetMapping("/")
 	public List<OrderDTO> readAll() {
+		System.out.println(repository.findAll());
 		return repository.findAll();
+		
+	}
+	
+	@GetMapping("/order/dato/{id}")
+	public OrderDTO get(@PathVariable String id) {
+		return repository.findById(id).get();
 	}
 
 	@PutMapping("/order/{id}")
@@ -51,71 +89,91 @@ public class OrderController {
 	@PostMapping("/order/{id}/item")
 	public OrderDTO create(@PathVariable String id,@RequestBody Map<String, String> item) {
 		
+		System.out.println(item);
 		OrderDTO orderDTO = repository.findById(id).get();
-		ProductDTO productDTO = repositoryProductDAO.findById(item.get("id")).get();
-		orderDTO.addItem(productDTO, Integer.parseInt(item.get("amount") ));
 		
-		double total_taxes=0;
-		double total_amount=0;
-		double sub_total=0;
+		ProductDTO productDTO = repositoryProductDAO.findById(item.get("_id")).get();
+		orderDTO.getItemsProduct().put(item.get("_id"), productDTO);
 		
-		Dictionary<String, Integer> taxes = orderDTO.getTaxes_amounts();
-		Hashtable<ProductDTO, Integer> products = orderDTO.getItems();
-		
-		for(ProductDTO product:products.keySet()) {
-			sub_total = sub_total +product.getUnit_price()*products.get(product);
+		if(orderDTO.getItems().contains(item.get("_id"))) {
+			orderDTO.getItems().put(item.get("_id"),orderDTO.getItems().get("_id") + Integer.parseInt(item.get("amount")));
 		}
-		total_taxes = total_taxes + sub_total*taxes.get("City_Tax")/100;
-		sub_total = sub_total*taxes.get("City_Tax")/100 +sub_total;
-		total_taxes = total_taxes + sub_total*taxes.get("Country_Tax")/100;
-		sub_total = sub_total*taxes.get("Country_Tax")/100 +sub_total;
-		total_taxes = total_taxes + sub_total*taxes.get("State_Tax")/100;
-		sub_total = sub_total*taxes.get("State_Tax")/100 +sub_total;
-		total_taxes = total_taxes + sub_total*taxes.get("Federal_Tax")/100;
-		sub_total = sub_total*taxes.get("Federal_Tax")/100 +sub_total;
-		total_amount = sub_total; 
-		orderDTO.setTotal_amount(total_amount);
-		orderDTO.setTotal_taxes(total_taxes);
+		else {
+			orderDTO.getItems().put(item.get("_id"), Integer.parseInt(item.get("amount")));
+		}
 		
-		return repository.save(orderDTO);
+		OrderDTO updateOrder = this.setTaxes(orderDTO);
+		return repository.save(updateOrder);
+
 	}
 	
-	@DeleteMapping("/order/{id}/item")
-	public OrderDTO delete(@PathVariable String id,@RequestBody Map<String, String> item) {
+	@PostMapping("/order/{id}/deleteItem")
+	public OrderDTO deleteItemOrder(@PathVariable String id,@Validated @RequestBody Map<String, String> item) {
 		
+		System.out.println(item);
 		OrderDTO orderDTO = repository.findById(id).get();
-		ProductDTO productDTO = repositoryProductDAO.findById(item.get("id")).get();
-		orderDTO.deleteItem(productDTO);
+		orderDTO.getItemsProduct().remove(item.get("id"));
+		orderDTO.getItems().remove(item.get("id"));
+		OrderDTO updateOrder = this.setTaxes(orderDTO);
 		
-		double total_taxes=0;
-		double total_amount=0;
-		double sub_total=0;
-		
-		Dictionary<String, Integer> taxes = orderDTO.getTaxes_amounts();
-		Hashtable<ProductDTO, Integer> products = orderDTO.getItems();
-		
-		for(ProductDTO product:products.keySet()) {
-			sub_total = sub_total +product.getUnit_price()*products.get(product);
-		}
-		total_taxes = total_taxes + sub_total*taxes.get("City_Tax")/100;
-		sub_total = sub_total*taxes.get("City_Tax")/100 +sub_total;
-		total_taxes = total_taxes + sub_total*taxes.get("Country_Tax")/100;
-		sub_total = sub_total*taxes.get("Country_Tax")/100 +sub_total;
-		total_taxes = total_taxes + sub_total*taxes.get("State_Tax")/100;
-		sub_total = sub_total*taxes.get("State_Tax")/100 +sub_total;
-		total_taxes = total_taxes + sub_total*taxes.get("Federal_Tax")/100;
-		sub_total = sub_total*taxes.get("Federal_Tax")/100 +sub_total;
-		total_amount = sub_total; 
-		orderDTO.setTotal_amount(total_amount);
-		orderDTO.setTotal_taxes(total_taxes);
-		
-		return repository.save(orderDTO);
+		return repository.save(updateOrder);
 	}
 	
 	@DeleteMapping("/order/{id}")
 	public void delete(@PathVariable String id) {
 		repository.deleteById(id);
 	}
+	
+	
+	public OrderDTO setTaxes(OrderDTO orderDTO) {
+		
+		double total_taxes = 0;
+		double sub_total = 0;
+		
+		System.out.println("Si entra a la conversión");
+		Hashtable<String, Integer> products = orderDTO.getItems();
+		for(String product:products.keySet()) {
+			ProductDTO productDTO = repositoryProductDAO.findById(product).get();
+			sub_total = sub_total + productDTO.getUnit_price()*products.get(product);
+		}
+		
+		System.out.println("Si entra a la conversión2"+sub_total);
+		
+		orderDTO.setSub_total( roundAvoid(sub_total, 2));
+		
+		orderDTO.getTaxes_amounts().put("City_Tax", roundAvoid(sub_total*10/100, 2));
+		sub_total = sub_total + orderDTO.getTaxes_amounts().get("City_Tax");
+		
+		orderDTO.getTaxes_amounts().put("Country_Tax", roundAvoid(sub_total*5/100, 2));
+		sub_total = sub_total+ orderDTO.getTaxes_amounts().get("Country_Tax");
+		
+		orderDTO.getTaxes_amounts().put("State_Tax", roundAvoid(sub_total*8/100, 2));
+		sub_total = sub_total+ orderDTO.getTaxes_amounts().get("State_Tax");
+		
+		orderDTO.getTaxes_amounts().put("Federal_Tax", roundAvoid(sub_total*2/100, 2));
+		sub_total = sub_total + orderDTO.getTaxes_amounts().get("Federal_Tax");
+		
+
+		total_taxes = orderDTO.getTaxes_amounts().get("City_Tax")+
+				 orderDTO.getTaxes_amounts().get("Country_Tax") +
+				 orderDTO.getTaxes_amounts().get("State_Tax") +
+				 orderDTO.getTaxes_amounts().get("Federal_Tax");
+		
+		System.out.println("Si entra a la conversión 3");
+		orderDTO.setTotal_amount(roundAvoid(sub_total, 2));
+		orderDTO.setTotal_taxes(roundAvoid(total_taxes, 2));
+		System.out.println("Si entra a la conversión 4");
+		
+		return orderDTO;
+	}
+	
+	public static double roundAvoid(double value, int places) {
+		
+	    double scale = Math.pow(10, places);
+	    return Math.round(value * scale) / scale;
+	    
+	}
+	
 		
 	
 }

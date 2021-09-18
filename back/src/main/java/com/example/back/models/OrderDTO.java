@@ -2,12 +2,11 @@ package com.example.back.models;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 
 @Document(collection = "order")
 public class OrderDTO {
@@ -15,44 +14,63 @@ public class OrderDTO {
 	@Id
 	private String _id;
 	
-	private int order_numer;
+	private int order_number;
 	
 	private status order_status;
 	
 	private LocalDate order_date;
 	
-	Dictionary<String, Integer> taxes_amounts = new Hashtable<String, Integer>();
+	Hashtable<String, Double> taxes_amounts = new Hashtable<String, Double>();
 	
-	private double total_taxes;
+	private double total_taxes = 0;
 	
-	private double total_amount;
+	private double total_amount = 0;
 	
-	private ConsumerDTO consumer;
+	private double sub_total = 0;
+	
+	private ConsumerDTO consumer = new ConsumerDTO();
 	
 	public OrderDTO() {
-		taxes_amounts.put("City_Tax",10);
-		taxes_amounts.put("Country_Tax",5);
-		taxes_amounts.put("State_Tax",8);
-		taxes_amounts.put("Federal_Tax",2);
+		taxes_amounts.put("City_Tax",new Double(0.0));
+		taxes_amounts.put("Country_Tax",new Double(0.0));
+		taxes_amounts.put("State_Tax",new Double(0.0));
+		taxes_amounts.put("Federal_Tax",new Double(0.0));
 		order_date = LocalDate.now();
 		order_status = order_status.Pending;
 	}
 	
-	Hashtable<ProductDTO, Integer> items = new Hashtable<ProductDTO, Integer>();
+	Hashtable<String, Integer> items = new Hashtable<String, Integer>();
+	Hashtable<String, ProductDTO> itemsProduct = new Hashtable<String, ProductDTO>();
+	
+	public Hashtable<String, ProductDTO> getItemsProduct() {
+		return itemsProduct;
+	}
+	
+	public void setItemsProduct(Hashtable<String, ProductDTO> itemsProduct) {
+		this.itemsProduct = itemsProduct;
+	}
 	
 	public String get_id() {
 		return _id;
+	}
+	
+	public double getSub_total() {
+		return sub_total;
+	}
+	
+	public void setSub_total(double sub_total) {
+		this.sub_total = sub_total;
 	}
 	
 	public void set_id(String _id) {
 		this._id = _id;
 	}
 	
-	public Hashtable<ProductDTO, Integer> getItems() {
+	public Hashtable<String, Integer> getItems() {
 		return items;
 	}
 	
-	public void setItems(Hashtable<ProductDTO, Integer> items) {
+	public void setItems(Hashtable<String, Integer> items) {
 		this.items = items;
 	}
 	
@@ -64,12 +82,12 @@ public class OrderDTO {
 		return order_date;
 	}
 	
-	public void setOrder_numer(int order_numer) {
-		this.order_numer = order_numer;
+	public void setOrder_number(int order_numer) {
+		this.order_number = order_numer;
 	}
 	
-	public int getOrder_numer() {
-		return order_numer;
+	public int getOrder_number() {
+		return order_number;
 	}
 	
 	public void setOrder_status(status order_status) {
@@ -96,23 +114,23 @@ public class OrderDTO {
 		return total_taxes;
 	}
 	
-	public void setConsumer(ConsumerDTO consumer) {
-		this.consumer = consumer;
-	}
-	
 	public ConsumerDTO getConsumer() {
 		return consumer;
 	}
 	
-	public void setTaxes_amounts(Dictionary<String, Integer> taxes_amounts) {
+	public void setConsumer(ConsumerDTO consumer) {
+		this.consumer = consumer;
+	}
+	
+	public void setTaxes_amounts(Hashtable<String, Double> taxes_amounts) {
 		this.taxes_amounts = taxes_amounts;
 	}
 	
-	public Dictionary<String, Integer> getTaxes_amounts() {
+	public Hashtable<String, Double> getTaxes_amounts() {
 		return taxes_amounts;
 	}
 	
-	public boolean addItem(ProductDTO product,int amount) {
+	public boolean addItem(String product,int amount) {
 		try {
 			this.items.put(product, amount);
 			return true;
@@ -121,7 +139,7 @@ public class OrderDTO {
 		}
 	}
 	
-	public boolean deleteItem(ProductDTO product) {
+	public boolean deleteItem(String product) {
 		try {
 			this.items.remove(product);
 			return true;

@@ -15,7 +15,11 @@ public class ProductDTO {
 	
 	private double unit_price;
 	
-	private boolean active;
+	private String active;
+	
+	public ProductDTO() {
+		this.active = "Active";
+	}
 	
 	public void set_id(String _id) {
 		this._id = _id;
@@ -25,8 +29,12 @@ public class ProductDTO {
 		return _id;
 	}
 	
-	public void setActive(boolean active) {
+	public void setActive(String active) {
 		this.active = active;
+	}
+	
+	public String getActive() {
+		return active;
 	}
 	
 	public void setName(String name) {
