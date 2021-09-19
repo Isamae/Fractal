@@ -98,8 +98,7 @@ public class OrderController {
 			orderDTO.getItems().put(item.get("_id"), Integer.parseInt(item.get("amount")));
 		}
 		
-		OrderDTO updateOrder = this.setTaxes(orderDTO);
-		return repository.save(updateOrder);
+		return repository.save(this.setTaxes(orderDTO));
 
 	}
 	

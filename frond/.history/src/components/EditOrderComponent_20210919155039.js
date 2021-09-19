@@ -77,9 +77,19 @@ class EditOrder extends Component {
 
     addProduct(){
 
+        this.state.products.forEach(product => {
+            if(product._id === this.state.productSelected ){
+                name = product.name;
+                precio_unit = product.unit_price;
+            }
+        })
+
+
         var data = {
             _id: this.state.productSelected,
             amount: this.state.amount,
+            name : name,
+            precio_unit : precio_unit
         };
 
         Routes.addItemOrder(this.state.currentOrder._id,data)
