@@ -1,7 +1,6 @@
 package com.example.back.controllers;
 
-import java.io.Console;
-import java.util.Dictionary;
+
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -9,8 +8,6 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.mapping.MongoSimpleTypes;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -71,7 +68,7 @@ public class OrderController {
 
 	@GetMapping("/")
 	public List<OrderDTO> readAll() {
-		System.out.println(repository.findAll());
+		
 		return repository.findAll();
 		
 	}
@@ -89,7 +86,6 @@ public class OrderController {
 	@PostMapping("/order/{id}/item")
 	public OrderDTO create(@PathVariable String id,@RequestBody Map<String, String> item) {
 		
-		System.out.println(item);
 		OrderDTO orderDTO = repository.findById(id).get();
 		
 		ProductDTO productDTO = repositoryProductDAO.findById(item.get("_id")).get();
@@ -110,13 +106,13 @@ public class OrderController {
 	@PostMapping("/order/{id}/deleteItem")
 	public OrderDTO deleteItemOrder(@PathVariable String id,@Validated @RequestBody Map<String, String> item) {
 		
-		System.out.println(item);
 		OrderDTO orderDTO = repository.findById(id).get();
 		orderDTO.getItemsProduct().remove(item.get("id"));
 		orderDTO.getItems().remove(item.get("id"));
 		OrderDTO updateOrder = this.setTaxes(orderDTO);
 		
 		return repository.save(updateOrder);
+	
 	}
 	
 	@DeleteMapping("/order/{id}")
@@ -124,20 +120,26 @@ public class OrderController {
 		repository.deleteById(id);
 	}
 	
+	@PostMapping("/order/{id}/editItem")
+	public OrderDTO editItem(@PathVariable String id,@RequestBody Map<String, String> item) {
+		OrderDTO orderDTO = repository.findById(id).get();
+		orderDTO.getItems().put(item.get("_id"), Integer.parseInt(item.get("amount")));
+		OrderDTO updateOrder = this.setTaxes(orderDTO);
+		
+		return repository.save(updateOrder);
+
+	}
 	
 	public OrderDTO setTaxes(OrderDTO orderDTO) {
 		
 		double total_taxes = 0;
 		double sub_total = 0;
-		
-		System.out.println("Si entra a la conversión");
+	
 		Hashtable<String, Integer> products = orderDTO.getItems();
 		for(String product:products.keySet()) {
 			ProductDTO productDTO = repositoryProductDAO.findById(product).get();
 			sub_total = sub_total + productDTO.getUnit_price()*products.get(product);
 		}
-		
-		System.out.println("Si entra a la conversión2"+sub_total);
 		
 		orderDTO.setSub_total( roundAvoid(sub_total, 2));
 		
@@ -159,10 +161,8 @@ public class OrderController {
 				 orderDTO.getTaxes_amounts().get("State_Tax") +
 				 orderDTO.getTaxes_amounts().get("Federal_Tax");
 		
-		System.out.println("Si entra a la conversión 3");
 		orderDTO.setTotal_amount(roundAvoid(sub_total, 2));
 		orderDTO.setTotal_taxes(roundAvoid(total_taxes, 2));
-		System.out.println("Si entra a la conversión 4");
 		
 		return orderDTO;
 	}
