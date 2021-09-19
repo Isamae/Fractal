@@ -119,13 +119,11 @@ class EditOrder extends Component {
     }
 
     editProduct(id_product,amountEdit,e){
-        this.setState({
-            amount : amountEdit
-        });
-
+    
         this.state.products.forEach(product => {
             if(product._id === id_product ){
                 this.setState({
+                    amount : amountEdit,
                     productSelected : product._id,
                     editItem:true,
                     nameProduct: product.name

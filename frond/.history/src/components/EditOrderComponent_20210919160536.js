@@ -79,7 +79,6 @@ class EditOrder extends Component {
         this.setState({
             editItem:false
         });
-        
         var data = {
             _id: this.state.productSelected,
             amount: this.state.amount,
@@ -118,14 +117,15 @@ class EditOrder extends Component {
         });
     }
 
-    editProduct(id_product,amountEdit,e){
+    editProduct(id_product,amount,e){
         this.setState({
-            amount : amountEdit
+            amount : amount
         });
 
         this.state.products.forEach(product => {
             if(product._id === id_product ){
                 this.setState({
+                    amount : amount,
                     productSelected : product._id,
                     editItem:true,
                     nameProduct: product.name

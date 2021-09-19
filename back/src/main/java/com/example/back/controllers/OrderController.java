@@ -91,8 +91,10 @@ public class OrderController {
 		ProductDTO productDTO = repositoryProductDAO.findById(item.get("_id")).get();
 		orderDTO.getItemsProduct().put(item.get("_id"), productDTO);
 		
-		if(orderDTO.getItems().contains(item.get("_id"))) {
-			orderDTO.getItems().put(item.get("_id"),orderDTO.getItems().get("_id") + Integer.parseInt(item.get("amount")));
+		if(orderDTO.getItems().containsKey(item.get("_id")) ) {
+			
+			int prev_amount = orderDTO.getItems().get(item.get("_id")) ;
+			orderDTO.getItems().put(item.get("_id"),prev_amount + Integer.parseInt(item.get("amount")));
 		}
 		else {
 			orderDTO.getItems().put(item.get("_id"), Integer.parseInt(item.get("amount")));

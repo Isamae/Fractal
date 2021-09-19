@@ -120,7 +120,7 @@ class EditOrder extends Component {
 
     editProduct(id_product,amountEdit,e){
         this.setState({
-            amount : amountEdit
+            amount : amount
         });
 
         this.state.products.forEach(product => {
