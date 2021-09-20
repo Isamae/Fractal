@@ -47,9 +47,8 @@ public class ProductController {
 	}
 	
 	@DeleteMapping("/product/{id}")
-	public String delete(@PathVariable String id) {
+	public void delete(@PathVariable String id) {
 		repository.deleteById(id);
-		return "delete";
 	}
 	
 }

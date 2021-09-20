@@ -60,8 +60,7 @@ class EditProduct extends Component {
             });
         })
         .catch(e => {
-            console.log(e);
-            this.props.history.push('/products');
+        console.log(e);
         });
       }
 
@@ -136,6 +135,7 @@ class EditProduct extends Component {
     }
 
     deleteProduct() {
+        //this.props.history.push('/products');
     
         Routes.deleteProduct(this.state.currentProduct._id).then(
             response=>{
