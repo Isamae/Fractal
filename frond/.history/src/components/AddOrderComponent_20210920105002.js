@@ -29,7 +29,9 @@ class AddOrder extends Component {
         this.newOrder = this.newOrder.bind(this);
 
         this.state = {
-            errors : {},
+            errors : {
+                
+            },
             show:false,
             id: null,
             order_number: 0,

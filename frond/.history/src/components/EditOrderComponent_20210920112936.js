@@ -16,7 +16,6 @@ class EditOrder extends Component {
         this.deleteOrder = this.deleteOrder.bind(this);
         this.onChangeProduct = this.onChangeProduct.bind(this);
         this.onChangeAmount = this.onChangeAmount.bind(this);
-        this.showModalAdd = this.showModalAdd.bind(this);
 
         this.state = {
             amount:0,
@@ -53,6 +52,8 @@ class EditOrder extends Component {
     setShow(showModal){
         this.setState({
             show: showModal,
+            message: "",
+            submittedProduct: false,
         });
     }
 
@@ -74,7 +75,11 @@ class EditOrder extends Component {
           });
     }
 
-    addProduct(){ 
+    addProduct(){
+        this.setState({
+            editItem : false
+        });
+        
         var data = {
             _id: this.state.productSelected,
             amount: this.state.amount,
@@ -128,14 +133,7 @@ class EditOrder extends Component {
                 });
             }
         })
-        this.handleShow();
-    }
 
-    showModalAdd(){
-        this.setState({
-            editItem : false,
-            submittedProduct: false
-        });
         this.handleShow();
     }
 
@@ -208,7 +206,7 @@ class EditOrder extends Component {
     }
 
     render() {
-        const {message, currentOrder, show, editItem, productSelected, products, nameProduct,submittedProduct,amount} = this.state
+        const {message, currentOrder, show, editItem, productSelected, products, nameProduct,submittedProduct} = this.state
         return (
             <div className="container ">
                 <p>{message}</p>
@@ -297,7 +295,7 @@ class EditOrder extends Component {
                             
                         </div>
                         <div className="ml-auto">
-                            <button onClick={this.showModalAdd} type="button" className="btn btn-primary">Add Item+</button>
+                            <button onClick={this.handleShow} type="button" className="btn btn-primary">Add Item+</button>
                         </div>
                     </div>            
                 </div>
@@ -378,7 +376,7 @@ class EditOrder extends Component {
                         {editItem ? (<Modal.Title>Edit Product</Modal.Title>):(<Modal.Title>Add Product</Modal.Title>)}
                         </Modal.Header>
                             <Modal.Body>
-                                {submittedProduct ?(<div><h4>You submitted successfully!</h4></div>):(<div></div>)}
+                                {this.state.submittedProduct ?(<div><h4>You submitted successfully!</h4></div>):(<div></div>)}
                                 <div className="form-group">
                                     <label htmlFor="amount">Amount</label>
                                     <input
@@ -386,23 +384,23 @@ class EditOrder extends Component {
                                         className="form-control"
                                         id="amount"
                                         required
-                                        value={amount}
+                                        value={this.state.amount}
                                         onChange={this.onChangeAmount}
                                         name="amount"
                                     />
                                 </div>
-                                {!editItem? (
+                                {!this.state.editItem? (
                                     <div className="form-group">
                                         <label htmlFor="product">Product</label>
                                         <select className="form-select"
                                             id="product"
                                             required
-                                            value={productSelected}
+                                            value={this.state.productSelected}
                                             onChange={this.onChangeProduct}
                                             name="product">
                                             <option selected>Product</option>
                                             {
-                                                products.map(
+                                                this.state.products.map(
                                                     (product) =>
                                                     <option value={product._id}>{product.name}</option>
                                                 )
@@ -410,11 +408,11 @@ class EditOrder extends Component {
                                         
                                         </select>
                                     </div>
-                                    ):( <h4>Name: {nameProduct}</h4>)
+                                    ):( <h4>Name: {this.state.nameProduct}</h4>)
                                 }
                                 
                                 {
-                                    editItem ? (<button onClick={this.setProduct} className="btn btn-success mt-4">Edit Product</button>):(<button onClick={this.addProduct} className="btn btn-success mt-4">Add Product</button>)
+                                    this.state.editItem ? (<button onClick={this.setProduct} className="btn btn-success mt-4">Edit Product</button>):(<button onClick={this.addProduct} className="btn btn-success mt-4">Add Product</button>)
 
                                 }
                                 

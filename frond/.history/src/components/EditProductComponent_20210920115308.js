@@ -34,7 +34,6 @@ class EditProduct extends Component {
         this.deleteProduct = this.deleteProduct.bind(this);
 
         this.state = {
-            errors:{},
             currentProduct:{
                 _id: null,
                 name: "",
@@ -183,7 +182,7 @@ class EditProduct extends Component {
                                         name="unit_price"
                                     />
                                 </div>
-                                {errors.unit_price && <p>{errors.unit_price}</p> }
+                                {errors.name && <p>{errors.name}</p> }
 
                                 <div className="form-group">
                                     <label htmlFor="category">Category</label>
@@ -200,7 +199,6 @@ class EditProduct extends Component {
                                         <option value="Desserts">Desserts</option>
                                         <option value="Drinks">Drinks</option>
                                     </select>
-                                    {errors.product_category && <p>{errors.product_category}</p> }
                                 </div>
 
                                 <div className="form-group">
@@ -215,7 +213,6 @@ class EditProduct extends Component {
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
                                     </select>
-                                    {errors.active && <p>{errors.active}</p> }
                                 </div>
                                 <button
                                     className="btn btn-success m-2 "

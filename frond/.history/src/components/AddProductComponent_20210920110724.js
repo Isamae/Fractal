@@ -11,7 +11,7 @@ const validate = values => {
         errors.product_category = "required field" 
     }
 
-    if(values.price < 0){
+    if(values.price <+ 0){
         errors.price = "required field" 
     }
 

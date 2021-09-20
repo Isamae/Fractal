@@ -34,7 +34,6 @@ class EditProduct extends Component {
         this.deleteProduct = this.deleteProduct.bind(this);
 
         this.state = {
-            errors:{},
             currentProduct:{
                 _id: null,
                 name: "",
@@ -172,19 +171,19 @@ class EditProduct extends Component {
                                 {errors.name && <p>{errors.name}</p> }
 
                                 <div className="form-group">
-                                    <label htmlFor="unit_price">Price</label>
+                                    <label htmlFor="price">Price</label>
                                     <input
                                         type="number"
                                         className="form-control"
-                                        id="unit_price"
+                                        id="price"
                                         required
                                         value={this.state.currentProduct.unit_price}
                                         onChange={this.onChangePrice}
-                                        name="unit_price"
+                                        name="price"
                                     />
                                 </div>
-                                {errors.unit_price && <p>{errors.unit_price}</p> }
-
+                                {errors.name && <p>{errors.name}</p> }
+                                
                                 <div className="form-group">
                                     <label htmlFor="category">Category</label>
                                     <select className="form-select"
@@ -200,7 +199,6 @@ class EditProduct extends Component {
                                         <option value="Desserts">Desserts</option>
                                         <option value="Drinks">Drinks</option>
                                     </select>
-                                    {errors.product_category && <p>{errors.product_category}</p> }
                                 </div>
 
                                 <div className="form-group">
@@ -215,7 +213,6 @@ class EditProduct extends Component {
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
                                     </select>
-                                    {errors.active && <p>{errors.active}</p> }
                                 </div>
                                 <button
                                     className="btn btn-success m-2 "

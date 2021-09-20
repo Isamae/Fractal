@@ -34,7 +34,6 @@ class EditProduct extends Component {
         this.deleteProduct = this.deleteProduct.bind(this);
 
         this.state = {
-            errors:{},
             currentProduct:{
                 _id: null,
                 name: "",
@@ -215,7 +214,6 @@ class EditProduct extends Component {
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
                                     </select>
-                                    {errors.active && <p>{errors.active}</p> }
                                 </div>
                                 <button
                                     className="btn btn-success m-2 "

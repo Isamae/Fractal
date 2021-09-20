@@ -16,7 +16,6 @@ class EditOrder extends Component {
         this.deleteOrder = this.deleteOrder.bind(this);
         this.onChangeProduct = this.onChangeProduct.bind(this);
         this.onChangeAmount = this.onChangeAmount.bind(this);
-        this.showModalAdd = this.showModalAdd.bind(this);
 
         this.state = {
             amount:0,
@@ -74,7 +73,11 @@ class EditOrder extends Component {
           });
     }
 
-    addProduct(){ 
+    addProduct(){
+        this.setState({
+            editItem : false
+        });
+        
         var data = {
             _id: this.state.productSelected,
             amount: this.state.amount,
@@ -128,14 +131,6 @@ class EditOrder extends Component {
                 });
             }
         })
-        this.handleShow();
-    }
-
-    showModalAdd(){
-        this.setState({
-            editItem : false,
-            submittedProduct: false
-        });
         this.handleShow();
     }
 
@@ -297,7 +292,7 @@ class EditOrder extends Component {
                             
                         </div>
                         <div className="ml-auto">
-                            <button onClick={this.showModalAdd} type="button" className="btn btn-primary">Add Item+</button>
+                            <button onClick={this.handleShow} type="button" className="btn btn-primary">Add Item+</button>
                         </div>
                     </div>            
                 </div>

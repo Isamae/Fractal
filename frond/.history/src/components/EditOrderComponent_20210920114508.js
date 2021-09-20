@@ -16,7 +16,6 @@ class EditOrder extends Component {
         this.deleteOrder = this.deleteOrder.bind(this);
         this.onChangeProduct = this.onChangeProduct.bind(this);
         this.onChangeAmount = this.onChangeAmount.bind(this);
-        this.showModalAdd = this.showModalAdd.bind(this);
 
         this.state = {
             amount:0,
@@ -74,7 +73,12 @@ class EditOrder extends Component {
           });
     }
 
-    addProduct(){ 
+    addProduct(){
+        this.setState({
+            editItem : false,
+            submittedProduct: false
+        });
+        
         var data = {
             _id: this.state.productSelected,
             amount: this.state.amount,
@@ -128,14 +132,6 @@ class EditOrder extends Component {
                 });
             }
         })
-        this.handleShow();
-    }
-
-    showModalAdd(){
-        this.setState({
-            editItem : false,
-            submittedProduct: false
-        });
         this.handleShow();
     }
 

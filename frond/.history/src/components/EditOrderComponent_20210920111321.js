@@ -16,7 +16,6 @@ class EditOrder extends Component {
         this.deleteOrder = this.deleteOrder.bind(this);
         this.onChangeProduct = this.onChangeProduct.bind(this);
         this.onChangeAmount = this.onChangeAmount.bind(this);
-        this.showModalAdd = this.showModalAdd.bind(this);
 
         this.state = {
             amount:0,
@@ -53,6 +52,8 @@ class EditOrder extends Component {
     setShow(showModal){
         this.setState({
             show: showModal,
+            message: "",
+            submittedProduct: false,
         });
     }
 
@@ -74,7 +75,11 @@ class EditOrder extends Component {
           });
     }
 
-    addProduct(){ 
+    addProduct(){
+        this.setState({
+            editItem:false
+        });
+        
         var data = {
             _id: this.state.productSelected,
             amount: this.state.amount,
@@ -122,20 +127,13 @@ class EditOrder extends Component {
             if(product._id === id_product ){
                 this.setState({
                     productSelected : product._id,
-                    editItem : true,
+                    editItem:true,
                     nameProduct: product.name
         
                 });
             }
         })
-        this.handleShow();
-    }
 
-    showModalAdd(){
-        this.setState({
-            editItem : false,
-            submittedProduct: false
-        });
         this.handleShow();
     }
 
@@ -176,7 +174,7 @@ class EditOrder extends Component {
             amount : e.target.value
         });
     }
-
+    
     onChangeProduct(e) {
         this.setState({
             productSelected : e.target.value
@@ -208,10 +206,9 @@ class EditOrder extends Component {
     }
 
     render() {
-        const {message, currentOrder, show, editItem, productSelected, products, nameProduct,submittedProduct,amount} = this.state
         return (
             <div className="container ">
-                <p>{message}</p>
+                <p>{this.state.message}</p>
                 <div className="d-flex justify-content-between m-4">
                     <div>
                         <h2>Order N&deg;</h2>
@@ -240,13 +237,13 @@ class EditOrder extends Component {
                     </div>
                     <div className="col-9">
                         <div className="mb-3 mt-2">
-                            <h5>{currentOrder.consumer.name}</h5>
+                            <h5>{this.state.currentOrder.consumer.name}</h5>
                         </div>
                         <div className="mb-3 mt-2">
-                            <h5>{currentOrder.order_status}</h5>
+                            <h5>{this.state.currentOrder.order_status}</h5>
                         </div>
                         <div className="mb-3 mt-2">
-                            <h5>{currentOrder.order_date}</h5>
+                            <h5>{this.state.currentOrder.order_date}</h5>
                         </div>
                     </div>
                 </div>
@@ -266,18 +263,18 @@ class EditOrder extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    Object.keys(currentOrder.items).map(
+                                    Object.keys(this.state.currentOrder.items).map(
                                         (item, index) =>
                                         <tr key = {item._id}>
                                             <td>{index+1}</td>
-                                            <td>{currentOrder.itemsProduct[item].name }</td>
-                                            <td>{Object.values(currentOrder.items)[index]}</td>
-                                            <td>{currentOrder.itemsProduct[item].unit_price }</td>
-                                            <td>{currentOrder.itemsProduct[item].unit_price*Object.values(currentOrder.items)[index]}</td>
+                                            <td>{this.state.currentOrder.itemsProduct[item].name }</td>
+                                            <td>{Object.values(this.state.currentOrder.items)[index]}</td>
+                                            <td>{this.state.currentOrder.itemsProduct[item].unit_price }</td>
+                                            <td>{this.state.currentOrder.itemsProduct[item].unit_price*Object.values(this.state.currentOrder.items)[index]}</td>
                                             <td>
                                                 <div className="d-flex justify-content-center">
                                                     <div>
-                                                        <button onClick={() => this.editProduct(item,Object.values(currentOrder.items)[index])} type="button" className="btn btn-link">Edit</button>
+                                                        <button onClick={() => this.editProduct(item,Object.values(this.state.currentOrder.items)[index])} type="button" className="btn btn-link">Edit</button>
                                                     </div>
                                                     <div>
                                                         <button onClick={() => this.deleteProduct(item)} type="button" className="btn btn-link">Delete</button>
@@ -297,7 +294,7 @@ class EditOrder extends Component {
                             
                         </div>
                         <div className="ml-auto">
-                            <button onClick={this.showModalAdd} type="button" className="btn btn-primary">Add Item+</button>
+                            <button onClick={this.handleShow} type="button" className="btn btn-primary">Add Item+</button>
                         </div>
                     </div>            
                 </div>
@@ -308,7 +305,7 @@ class EditOrder extends Component {
                                 <h5>Subtotal</h5>
                             </div>
                             <div className="col-6 d-flex justify-content-end">
-                                <h5>&#36;{currentOrder.sub_total}</h5>
+                                <h5>&#36;{this.state.currentOrder.sub_total}</h5>
                             </div>
                             <div className="col-6">
                                 <h5>Taxes</h5>
@@ -319,25 +316,25 @@ class EditOrder extends Component {
                                 <h6>Total City Tax:</h6>
                             </div>
                             <div className="col-5 d-flex justify-content-end">
-                                <h6>&#36;{currentOrder.taxes_amounts.City_Tax}</h6>
+                                <h6>&#36;{this.state.currentOrder.taxes_amounts.City_Tax}</h6>
                             </div>
                             <div className="col-7">
                                 <h6>Total Country Tax:</h6>
                             </div>
                             <div className="col-5 d-flex justify-content-end">
-                                <h6>&#36;{currentOrder.taxes_amounts.Country_Tax}</h6>
+                                <h6>&#36;{this.state.currentOrder.taxes_amounts.Country_Tax}</h6>
                             </div>
                             <div className="col-7">
                                 <h6>Total State Tax:</h6>
                             </div>
                             <div className="col-5 d-flex justify-content-end">
-                                <h6>&#36;{currentOrder.taxes_amounts.Federal_Tax}</h6>
+                                <h6>&#36;{this.state.currentOrder.taxes_amounts.Federal_Tax}</h6>
                             </div>
                             <div className="col-7">
                                 <h6>Total Federal Tax:</h6>
                             </div>
                             <div className="col-5 d-flex justify-content-end">
-                                <h6>&#36;{currentOrder.taxes_amounts.State_Tax}</h6>
+                                <h6>&#36;{this.state.currentOrder.taxes_amounts.State_Tax}</h6>
                             </div>
                         </div>
                         <div className="row">
@@ -345,7 +342,7 @@ class EditOrder extends Component {
                                 <h5>Total Taxes</h5>
                             </div>
                             <div className="col-6 d-flex justify-content-end">
-                                <h5>&#36;{currentOrder.total_taxes}</h5>
+                                <h5>&#36;{this.state.currentOrder.total_taxes}</h5>
                             </div>
                         </div>
                         <div className="row">
@@ -353,7 +350,7 @@ class EditOrder extends Component {
                                 <h5>Total</h5>
                             </div>
                             <div className="col-6 d-flex justify-content-end">
-                                <h5>&#36;{currentOrder.total_amount}</h5>
+                                <h5>&#36;{this.state.currentOrder.total_amount}</h5>
                             </div>
                         </div>
                         <div className="row">
@@ -369,40 +366,40 @@ class EditOrder extends Component {
                 {/* <!--- Model Box ---> */}
                 <div className="model_box">
                     <Modal
-                        show={show}
+                        show={this.state.show}
                         onHide={this.handleClose}
                         backdrop="static"
                         keyboard={false}
                     >
                         <Modal.Header closeButton>
-                        {editItem ? (<Modal.Title>Edit Product</Modal.Title>):(<Modal.Title>Add Product</Modal.Title>)}
+                        {this.state.editItem ? (<Modal.Title>Edit Product</Modal.Title>):(<Modal.Title>Add Product</Modal.Title>)}
                         </Modal.Header>
                             <Modal.Body>
-                                {submittedProduct ?(<div><h4>You submitted successfully!</h4></div>):(<div></div>)}
+                                {this.state.submittedProduct ?(<div><h4>You submitted successfully!</h4></div>):(<div></div>)}
                                 <div className="form-group">
                                     <label htmlFor="amount">Amount</label>
                                     <input
-                                        type="number"
+                                        type="amount"
                                         className="form-control"
                                         id="amount"
                                         required
-                                        value={amount}
+                                        value={this.state.amount}
                                         onChange={this.onChangeAmount}
                                         name="amount"
                                     />
                                 </div>
-                                {!editItem? (
+                                {!this.state.editItem? (
                                     <div className="form-group">
                                         <label htmlFor="product">Product</label>
                                         <select className="form-select"
                                             id="product"
                                             required
-                                            value={productSelected}
+                                            value={this.state.productSelected}
                                             onChange={this.onChangeProduct}
                                             name="product">
                                             <option selected>Product</option>
                                             {
-                                                products.map(
+                                                this.state.products.map(
                                                     (product) =>
                                                     <option value={product._id}>{product.name}</option>
                                                 )
@@ -410,11 +407,11 @@ class EditOrder extends Component {
                                         
                                         </select>
                                     </div>
-                                    ):( <h4>Name: {nameProduct}</h4>)
+                                    ):( <h4>Name: {this.state.nameProduct}</h4>)
                                 }
                                 
                                 {
-                                    editItem ? (<button onClick={this.setProduct} className="btn btn-success mt-4">Edit Product</button>):(<button onClick={this.addProduct} className="btn btn-success mt-4">Add Product</button>)
+                                    this.state.editItem ? (<button onClick={this.setProduct} className="btn btn-success mt-4">Edit Product</button>):(<button onClick={this.addProduct} className="btn btn-success mt-4">Add Product</button>)
 
                                 }
                                 

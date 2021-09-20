@@ -34,7 +34,7 @@ class EditProduct extends Component {
         this.deleteProduct = this.deleteProduct.bind(this);
 
         this.state = {
-            errors:{},
+            errors:{}
             currentProduct:{
                 _id: null,
                 name: "",

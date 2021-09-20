@@ -4,19 +4,19 @@ import Routes from "../services/routes.service";
 const validate = values => {
     const errors = {}
 
-    if(values.name === ""){
-        errors.name = "required field" 
+    if(!values.name){
+        errors.order_number = "required field" 
     }
-    if(values.product_category===""){
-        errors.product_category = "required field" 
+    if(!values.category){
+        errors.active = "required field" 
     }
 
     if(values.price < 0){
-        errors.price = "required field" 
+        errors.consumer = "required field" 
     }
 
     if(values.active === ""){
-        errors.active = "required field" 
+        errors.consumer = "required field" 
     }
 
     return errors;
@@ -172,7 +172,7 @@ class AddProduct extends Component {
                                 <option value="Drinks">Drinks</option>
                             </select>
                         </div>
-                        {errors.product_category && <p>{errors.product_category}</p>}
+                        {errors.category && <p>{errors.category}</p>}
 
                         <div className="form-group">
                             <label htmlFor="active">Status</label>

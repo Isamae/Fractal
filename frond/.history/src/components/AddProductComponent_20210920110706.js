@@ -5,7 +5,7 @@ const validate = values => {
     const errors = {}
 
     if(values.name === ""){
-        errors.name = "required field" 
+        errors.order_number = "required field" 
     }
     if(values.product_category===""){
         errors.product_category = "required field" 

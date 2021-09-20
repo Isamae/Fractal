@@ -5,18 +5,18 @@ const validate = values => {
     const errors = {}
 
     if(values.name === ""){
-        errors.name = "required field" 
+        errors.order_number = "required field" 
     }
     if(values.product_category===""){
-        errors.product_category = "required field" 
+        errors.active = "required field" 
     }
 
     if(values.price < 0){
-        errors.price = "required field" 
+        errors.consumer = "required field" 
     }
 
     if(values.active === ""){
-        errors.active = "required field" 
+        errors.consumer = "required field" 
     }
 
     return errors;

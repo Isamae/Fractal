@@ -4,19 +4,15 @@ import Routes from "../services/routes.service";
 const validate = values => {
     const errors = {}
 
-    if(values.name === ""){
-        errors.name = "required field" 
+    if(!values.order_number){
+        errors.order_number = "required field" 
     }
-    if(values.product_category===""){
-        errors.product_category = "required field" 
-    }
-
-    if(values.price < 0){
-        errors.price = "required field" 
-    }
-
-    if(values.active === ""){
+    if(values.order_status === ""){
         errors.active = "required field" 
+    }
+
+    if(values.consumer._id == null){
+        errors.consumer = "consumer required field" 
     }
 
     return errors;
@@ -140,7 +136,6 @@ class AddProduct extends Component {
                                 name="name"
                             />
                         </div>
-                        {errors.name && <p>{errors.name}</p> }
 
                         <div className="form-group">
                             <label htmlFor="price">Price</label>
@@ -154,10 +149,9 @@ class AddProduct extends Component {
                                 name="price"
                             />
                         </div>
-                        {errors.price && <p>{errors.price}</p>}
                         
                         <div className="form-group">
-                            <label htmlFor="category">Category</label>
+                            <label htmlFor="category">Price</label>
                             <select className="form-select"
                                 id="category"
                                 required
@@ -172,7 +166,6 @@ class AddProduct extends Component {
                                 <option value="Drinks">Drinks</option>
                             </select>
                         </div>
-                        {errors.product_category && <p>{errors.product_category}</p>}
 
                         <div className="form-group">
                             <label htmlFor="active">Status</label>
@@ -187,7 +180,6 @@ class AddProduct extends Component {
                                 <option value="Inactive">Inactive</option>
                             </select>
                         </div>
-                        {errors.active && <p>{errors.active}</p>}
 
                         <button onClick={this.saveProduct} className="btn btn-success m-2">
                             Submit

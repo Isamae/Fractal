@@ -16,7 +16,6 @@ class EditOrder extends Component {
         this.deleteOrder = this.deleteOrder.bind(this);
         this.onChangeProduct = this.onChangeProduct.bind(this);
         this.onChangeAmount = this.onChangeAmount.bind(this);
-        this.showModalAdd = this.showModalAdd.bind(this);
 
         this.state = {
             amount:0,

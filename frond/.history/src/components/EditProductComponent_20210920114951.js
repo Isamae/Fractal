@@ -11,7 +11,7 @@ const validate = values => {
         errors.product_category = "required field" 
     }
 
-    if(values.unit_price < 0){
+    if(values.price < 0){
         errors.price = "required field" 
     }
 
@@ -34,7 +34,6 @@ class EditProduct extends Component {
         this.deleteProduct = this.deleteProduct.bind(this);
 
         this.state = {
-            errors:{},
             currentProduct:{
                 _id: null,
                 name: "",
@@ -113,25 +112,16 @@ class EditProduct extends Component {
     }
 
     updateProduct() {
-
-        const {errors, ...noErrors} = this.state
-        const result = validate(noErrors);
-
-        this.setState({errors:result});
-        if(!Object.keys(result).length){
-            Routes.updateProduct(this.state.currentProduct._id,this.state.currentProduct)
-            .then(response => {
-                console.log(response.data);
-                this.setState({
-                message: "The product was updated successfully!"
-                });
-            })
-            .catch(e => {
-                console.log(e);
+        Routes.updateProduct(this.state.currentProduct._id,this.state.currentProduct)
+        .then(response => {
+            console.log(response.data);
+            this.setState({
+            message: "The product was updated successfully!"
             });
-        }
-
-        
+        })
+        .catch(e => {
+            console.log(e);
+        });
     }
 
     deleteProduct() {
@@ -146,7 +136,7 @@ class EditProduct extends Component {
     }
 
     render() {
-        const { currentProduct,errors } = this.state;
+        const { currentProduct } = this.state;
         return (
             <div className="container ">
                 
@@ -169,22 +159,20 @@ class EditProduct extends Component {
                                         name="name"
                                     />
                                 </div>
-                                {errors.name && <p>{errors.name}</p> }
 
                                 <div className="form-group">
-                                    <label htmlFor="unit_price">Price</label>
+                                    <label htmlFor="price">Price</label>
                                     <input
                                         type="number"
                                         className="form-control"
-                                        id="unit_price"
+                                        id="price"
                                         required
                                         value={this.state.currentProduct.unit_price}
                                         onChange={this.onChangePrice}
-                                        name="unit_price"
+                                        name="price"
                                     />
                                 </div>
-                                {errors.unit_price && <p>{errors.unit_price}</p> }
-
+                                
                                 <div className="form-group">
                                     <label htmlFor="category">Category</label>
                                     <select className="form-select"
@@ -200,7 +188,6 @@ class EditProduct extends Component {
                                         <option value="Desserts">Desserts</option>
                                         <option value="Drinks">Drinks</option>
                                     </select>
-                                    {errors.product_category && <p>{errors.product_category}</p> }
                                 </div>
 
                                 <div className="form-group">
@@ -215,7 +202,6 @@ class EditProduct extends Component {
                                         <option value="Active">Active</option>
                                         <option value="Inactive">Inactive</option>
                                     </select>
-                                    {errors.active && <p>{errors.active}</p> }
                                 </div>
                                 <button
                                     className="btn btn-success m-2 "

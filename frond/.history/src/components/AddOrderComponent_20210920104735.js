@@ -8,7 +8,7 @@ const validate = values => {
     if(!values.order_number){
         errors.order_number = "required field" 
     }
-    if(values.order_status === ""){
+    if(values.order_status == ""){
         errors.active = "required field" 
     }
 
@@ -29,7 +29,9 @@ class AddOrder extends Component {
         this.newOrder = this.newOrder.bind(this);
 
         this.state = {
-            errors : {},
+            errors : {
+                
+            },
             show:false,
             id: null,
             order_number: 0,
