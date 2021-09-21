@@ -22,22 +22,16 @@ class ProductComponent extends React.Component{
     }
 
     prev(){
-        
-        if(this.state.currentPage>1 && this.state.currentPage<=this.state.pageCount){
+       console.log(this.state.currentPage);
+        if(this.state.currentPage > 1 && this.state.currentPage <= this.state.pageCount){
             this.setCurrentPage(this.state.currentPage-1);
-            const startIndex =(this.state.currentPage-1)*this.state.pageSize;
+            const startIndex =(this.state.currentPage-2)*this.state.pageSize;
             this.setpaginatedOrder(this.state.orders,startIndex);
-            this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage-1).take(4).value();
-        }
-        else if(this.state.currentPage==1){
-            this.setpaginatedOrder(this.state.orders,0);
-            this.state.paginatePages = _(this.state.pages).slice(0).take(4).value();
+            this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage-2).take(4).value();
         }
     }
 
     next(){
-        console.log(this.state.currentPage);
-        console.log(this.state.pageCount);
         if(this.state.currentPage>0 && this.state.currentPage+1<=this.state.pageCount){
             this.setCurrentPage(this.state.currentPage+1);
             const startIndex =(this.state.currentPage)*this.state.pageSize;
