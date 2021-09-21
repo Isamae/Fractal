@@ -91,13 +91,13 @@ public class OrderController {
 		ProductDTO productDTO = repositoryProductDAO.findById(item.get("_id")).get();
 		orderDTO.getItemsProduct().put(item.get("_id"), productDTO);
 		
-		if(orderDTO.getItems().containsKey(item.get("_id")) ) {
+		if(orderDTO.getItemsAmount().containsKey(item.get("_id")) ) {
 			
-			int prev_amount = orderDTO.getItems().get(item.get("_id")) ;
-			orderDTO.getItems().put(item.get("_id"),prev_amount + Integer.parseInt(item.get("amount")));
+			int prev_amount = orderDTO.getItemsAmount().get(item.get("_id")) ;
+			orderDTO.getItemsAmount().put(item.get("_id"),prev_amount + Integer.parseInt(item.get("amount")));
 		}
 		else {
-			orderDTO.getItems().put(item.get("_id"), Integer.parseInt(item.get("amount")));
+			orderDTO.getItemsAmount().put(item.get("_id"), Integer.parseInt(item.get("amount")));
 		}
 		
 		return repository.save(this.setTaxes(orderDTO));
@@ -109,7 +109,7 @@ public class OrderController {
 		
 		OrderDTO orderDTO = repository.findById(id).get();
 		orderDTO.getItemsProduct().remove(item.get("id"));
-		orderDTO.getItems().remove(item.get("id"));
+		orderDTO.getItemsAmount().remove(item.get("id"));
 		OrderDTO updateOrder = this.setTaxes(orderDTO);
 		
 		return repository.save(updateOrder);
@@ -124,7 +124,7 @@ public class OrderController {
 	@PostMapping("/order/{id}/editItem")
 	public OrderDTO editItem(@PathVariable String id,@RequestBody Map<String, String> item) {
 		OrderDTO orderDTO = repository.findById(id).get();
-		orderDTO.getItems().put(item.get("_id"), Integer.parseInt(item.get("amount")));
+		orderDTO.getItemsAmount().put(item.get("_id"), Integer.parseInt(item.get("amount")));
 		OrderDTO updateOrder = this.setTaxes(orderDTO);
 		
 		return repository.save(updateOrder);
@@ -136,7 +136,7 @@ public class OrderController {
 		double total_taxes = 0;
 		double sub_total = 0;
 	
-		Hashtable<String, Integer> products = orderDTO.getItems();
+		Hashtable<String, Integer> products = orderDTO.getItemsAmount();
 		for(String product:products.keySet()) {
 			ProductDTO productDTO = repositoryProductDAO.findById(product).get();
 			sub_total = sub_total + productDTO.getUnit_price()*products.get(product);

@@ -160,11 +160,10 @@ class EditOrder extends Component {
     getOrder(id) {
         Routes.getOrder(id)
           .then(response => {
-            console.log(response.data)
                 this.setState({
                     currentOrder: response.data,
                 },() => {
-                    console.log(response.data)
+                    console.log(this.state.currentOrder)
                 });
           })
           .catch(e => {

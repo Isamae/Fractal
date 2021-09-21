@@ -36,7 +36,7 @@ class EditOrder extends Component {
                     name:""
                 },
                 itemsProduct:{},
-                itemsAmount:{}
+                items:{}
             },
             message: "",
             show: false,
@@ -160,11 +160,10 @@ class EditOrder extends Component {
     getOrder(id) {
         Routes.getOrder(id)
           .then(response => {
-            console.log(response.data)
                 this.setState({
                     currentOrder: response.data,
                 },() => {
-                    console.log(response.data)
+                    console.log(this.state.currentOrder)
                 });
           })
           .catch(e => {
@@ -267,18 +266,18 @@ class EditOrder extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    Object.keys(currentOrder.itemsAmount).map(
+                                    Object.keys(currentOrder.items).map(
                                         (item, index) =>
                                         <tr key = {item}>
                                             <td>{index+1}</td>
                                             <td>{currentOrder.itemsProduct[item].name }</td>
-                                            <td>{Object.values(currentOrder.itemsAmount)[index]}</td>
+                                            <td>{Object.values(currentOrder.items)[index]}</td>
                                             <td>{currentOrder.itemsProduct[item].unit_price }</td>
-                                            <td>{currentOrder.itemsProduct[item].unit_price*Object.values(currentOrder.itemsAmount)[index]}</td>
+                                            <td>{currentOrder.itemsProduct[item].unit_price*Object.values(currentOrder.items)[index]}</td>
                                             <td>
                                                 <div className="d-flex justify-content-center">
                                                     <div>
-                                                        <button onClick={() => this.editProduct(item,Object.values(currentOrder.itemsAmount)[index])} type="button" className="btn btn-link">Edit</button>
+                                                        <button onClick={() => this.editProduct(item,Object.values(currentOrder.items)[index])} type="button" className="btn btn-link">Edit</button>
                                                     </div>
                                                     <div>
                                                         <button onClick={() => this.deleteProduct(item)} type="button" className="btn btn-link">Delete</button>

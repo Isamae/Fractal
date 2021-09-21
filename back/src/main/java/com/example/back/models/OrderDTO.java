@@ -1,9 +1,7 @@
 package com.example.back.models;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -31,15 +29,15 @@ public class OrderDTO {
 	private ConsumerDTO consumer = new ConsumerDTO();
 	
 	public OrderDTO() {
-		taxes_amounts.put("City_Tax",new Double(0.0));
-		taxes_amounts.put("Country_Tax",new Double(0.0));
-		taxes_amounts.put("State_Tax",new Double(0.0));
-		taxes_amounts.put("Federal_Tax",new Double(0.0));
+		taxes_amounts.put("City_Tax",0.0);
+		taxes_amounts.put("Country_Tax",0.0);
+		taxes_amounts.put("State_Tax",0.0);
+		taxes_amounts.put("Federal_Tax",0.0);
 		order_date = LocalDate.now();
 		order_status = order_status.Pending;
 	}
 	
-	Hashtable<String, Integer> items = new Hashtable<String, Integer>();
+	Hashtable<String, Integer> itemsAmount = new Hashtable<String, Integer>();
 	Hashtable<String, ProductDTO> itemsProduct = new Hashtable<String, ProductDTO>();
 	
 	public Hashtable<String, ProductDTO> getItemsProduct() {
@@ -66,12 +64,12 @@ public class OrderDTO {
 		this._id = _id;
 	}
 	
-	public Hashtable<String, Integer> getItems() {
-		return items;
+	public void setItemsAmount(Hashtable<String, Integer> itemsAmount) {
+		this.itemsAmount = itemsAmount;
 	}
 	
-	public void setItems(Hashtable<String, Integer> items) {
-		this.items = items;
+	public Hashtable<String, Integer> getItemsAmount() {
+		return itemsAmount;
 	}
 	
 	public void setOrder_date(LocalDate order_date) {
@@ -132,7 +130,7 @@ public class OrderDTO {
 	
 	public boolean addItem(String product,int amount) {
 		try {
-			this.items.put(product, amount);
+			this.itemsAmount.put(product, amount);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -141,7 +139,7 @@ public class OrderDTO {
 	
 	public boolean deleteItem(String product) {
 		try {
-			this.items.remove(product);
+			this.itemsAmount.remove(product);
 			return true;
 		} catch (Exception e) {
 			return false;
