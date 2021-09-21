@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Routes from "../services/routes.service";
-import _, { identity } from "lodash";
+import _  from "lodash";
 
 class ProductComponent extends React.Component{
     constructor(props){
@@ -18,7 +18,7 @@ class ProductComponent extends React.Component{
     }
 
     componentDidMount(){
-        this.setProducts();
+        this.getProducts();
     }
     
     prev(){
@@ -29,14 +29,15 @@ class ProductComponent extends React.Component{
             this.setpaginatedProduct(this.state.products,startIndex);
             this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage-1).take(4).value();
         }
-        else if(this.state.currentPage==1){
+        else if(this.state.currentPage===1){
             this.setpaginatedProduct(this.state.products,0);
             this.state.paginatePages = _(this.state.pages).slice(0).take(4).value();
         }
     }
 
     next(){
-        if(this.state.currentPage+1>1 && this.state.currentPage+1<=this.state.pageCount){
+       
+        if(this.state.currentPage>0 && this.state.currentPage+1<=this.state.pageCount){
             this.setCurrentPage(this.state.currentPage+1);
             const startIndex =(this.state.currentPage)*this.state.pageSize;
             this.setpaginatedProduct(this.state.products,startIndex);
@@ -44,14 +45,14 @@ class ProductComponent extends React.Component{
         }
     }
 
-    setProducts(){
+    getProducts(){
         Routes.getAllProducts().then(
             response => {
                 this.setState({
                     products: response.data,
-                    }
-                ) ;
-                this.state.pageCount = this.state.products? Math.ceil(this.state.products.length)/this.state.pageSize: 0;
+                    
+                }) ;
+                this.state.pageCount = this.state.products? Math.ceil(this.state.products.length/this.state.pageSize): 0;
 
                 if(this.state.pageCount!==1){
                         this.state.pages = _.range(1,this.state.pageCount+1);
@@ -100,12 +101,12 @@ class ProductComponent extends React.Component{
                         <table className="table table-striped table-hover table-bordered text-center">
                             <thead>
                                 <tr>
-                                    <td>No</td>
-                                    <td>Name</td>
-                                    <td>Category</td>
-                                    <td>Preci</td>
-                                    <td>Status</td>
-                                    <td>Actions</td>
+                                    <td><strong>No</strong></td>
+                                    <td><strong>Name</strong></td>
+                                    <td><strong>Category</strong></td>
+                                    <td><strong>Price </strong></td>
+                                    <td><strong>Status</strong></td>
+                                    <td><strong>Actions</strong></td>
                                 </tr>
                             </thead>
                             <tbody>

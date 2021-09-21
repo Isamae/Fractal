@@ -1,12 +1,19 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Routes from "../services/routes.service";
+import _ from "lodash";
 
 class ProductComponent extends React.Component{
     constructor(props){
         super(props)
         this.state ={
-            orders:[]
+            orders:[],
+            paginateOrder : [],
+            pageCount:0,
+            pages : [1],
+            paginatePages:[],
+            currentPage: 1,
+            pageSize: 2
         }
     }
     
@@ -14,11 +21,63 @@ class ProductComponent extends React.Component{
         this.getOrders();
     }
 
+    prev(){
+        
+        if(this.state.currentPage>1 && this.state.currentPage<=this.state.pageCount){
+            this.setCurrentPage(this.state.currentPage-1);
+            const startIndex =(this.state.currentPage-1)*this.state.pageSize;
+            this.setpaginatedOrder(this.state.orders,startIndex);
+            this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage-1).take(4).value();
+        }
+        else if(this.state.currentPage==1){
+            this.setpaginatedOrder(this.state.orders,0);
+            this.state.paginatePages = _(this.state.pages).slice(0).take(4).value();
+        }
+    }
+
+    next(){
+        console.log(this.state.currentPage);
+        console.log(this.state.pageCount);
+        if(this.state.currentPage>0 && this.state.currentPage+1<=this.state.pageCount){
+            this.setCurrentPage(this.state.currentPage+1);
+            const startIndex =(this.state.currentPage)*this.state.pageSize;
+            this.setpaginatedOrder(this.state.orders,startIndex);
+            this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage).take(4).value();
+        }
+    }
+
+    pagination(pageNum){
+        this.setCurrentPage(pageNum);
+        const startIndex =(pageNum-1)*this.state.pageSize;
+        this.setpaginatedOrder(this.state.orders,startIndex);
+        this.state.paginatePages = _(this.state.pages).slice(pageNum-1).take(4).value();
+        
+    }
+    
+    setCurrentPage(pageNum){
+        this.setState({currentPage: pageNum});
+    }
+
+    setpaginatedOrder(data,start){
+        this.setState({paginateOrder: _(data).slice(start).take(this.state.pageSize).value() });
+
+    }
+
     getOrders(){
         Routes.getAllOrders().then(
             response => {
-                this.setState({orders: response.data}) 
-                console.log(response.data)
+                this.setState({
+                    orders: response.data
+                });
+                this.state.pageCount = this.state.orders? Math.ceil(this.state.orders.length/this.state.pageSize): 0;
+
+                if(this.state.pageCount!==1){
+                        this.state.pages = _.range(1,this.state.pageCount+1);
+                        this.state.paginatePages = _(this.state.pages).slice(this.currentPage).take(4).value();
+                }
+
+                this.setpaginatedOrder(this.state.orders, 0);
+                this.setCurrentPage(1);
             }
             
         ).catch(e => {
@@ -53,7 +112,7 @@ class ProductComponent extends React.Component{
                             </thead>
                             <tbody>
                                 {
-                                    this.state.orders.map(
+                                    this.state.paginateOrder.map(
                                         order =>
                                         <tr key = {order._id}>
                                             <td>{order.order_number}</td>
@@ -76,6 +135,35 @@ class ProductComponent extends React.Component{
                         </table>
                     </div>
                 </div>
+                <nav className="d-flex justify-content-right">
+                    <ul className="pagination">
+                        {
+                             <li  onClick={()=>this.prev()}>
+                                <p className="page-link">Prev </p>
+                            </li>
+                        }
+                        {
+                           
+                            this.state.paginatePages.map((page) => (
+                                <li 
+                                    className={
+                                        page===this.state.currentPage? "page-item active":"page-item"
+                                    }
+                                    onClick={()=>this.pagination(page)}
+
+                                >
+                                    <p className="page-link"
+                                    >{page} </p>
+                                </li>
+                            ))
+                        }
+                        {
+                            <li  onClick={()=>this.next()}>
+                                <p className="page-link">Next </p>
+                            </li>
+                        }
+                    </ul>
+                </nav>
             </div>
         )
     }
