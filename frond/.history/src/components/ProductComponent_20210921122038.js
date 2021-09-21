@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Routes from "../services/routes.service";
-import _, { identity } from "lodash";
+import _ from "lodash";
 
 class ProductComponent extends React.Component{
     constructor(props){
@@ -22,21 +22,18 @@ class ProductComponent extends React.Component{
     }
     
     prev(){
-        
+        console.log(this.state.currentPage);
         if(this.state.currentPage>1 && this.state.currentPage<=this.state.pageCount){
             this.setCurrentPage(this.state.currentPage-1);
             const startIndex =(this.state.currentPage-1)*this.state.pageSize;
             this.setpaginatedProduct(this.state.products,startIndex);
             this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage-1).take(4).value();
         }
-        else if(this.state.currentPage==1){
-            this.setpaginatedProduct(this.state.products,0);
-            this.state.paginatePages = _(this.state.pages).slice(0).take(4).value();
-        }
     }
 
     next(){
-        if(this.state.currentPage+1>1 && this.state.currentPage+1<=this.state.pageCount){
+        var  valuePage= this.state.currentPage+1;
+        if(valuePage>1 && valuePage<=this.state.pageCount){
             this.setCurrentPage(this.state.currentPage+1);
             const startIndex =(this.state.currentPage)*this.state.pageSize;
             this.setpaginatedProduct(this.state.products,startIndex);

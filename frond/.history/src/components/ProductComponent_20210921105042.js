@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import Routes from "../services/routes.service";
-import _, { identity } from "lodash";
+import _ from "lodash";
 
 class ProductComponent extends React.Component{
     constructor(props){
@@ -11,7 +11,6 @@ class ProductComponent extends React.Component{
             paginateProduct : [],
             pageCount:0,
             pages : [1],
-            paginatePages:[],
             currentPage: 1,
             pageSize: 2
         }
@@ -22,28 +21,13 @@ class ProductComponent extends React.Component{
     }
     
     prev(){
-        
-        if(this.state.currentPage>1 && this.state.currentPage<=this.state.pageCount){
-            this.setCurrentPage(this.state.currentPage-1);
-            const startIndex =(this.state.currentPage-1)*this.state.pageSize;
-            this.setpaginatedProduct(this.state.products,startIndex);
-            this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage-1).take(4).value();
-        }
-        else if(this.state.currentPage==1){
-            this.setpaginatedProduct(this.state.products,0);
-            this.state.paginatePages = _(this.state.pages).slice(0).take(4).value();
-        }
+
     }
 
     next(){
-        if(this.state.currentPage+1>1 && this.state.currentPage+1<=this.state.pageCount){
-            this.setCurrentPage(this.state.currentPage+1);
-            const startIndex =(this.state.currentPage)*this.state.pageSize;
-            this.setpaginatedProduct(this.state.products,startIndex);
-            this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage).take(4).value();
-        }
-    }
 
+    }
+    
     setProducts(){
         Routes.getAllProducts().then(
             response => {
@@ -55,9 +39,8 @@ class ProductComponent extends React.Component{
 
                 if(this.state.pageCount!==1){
                         this.state.pages = _.range(1,this.state.pageCount+1);
-                        this.state.paginatePages = _(this.state.pages).slice(this.currentPage).take(4).value();
                 }
-
+                
                 this.setpaginatedProduct(this.state.products, 0);
                 this.setCurrentPage(1);
             }
@@ -75,7 +58,6 @@ class ProductComponent extends React.Component{
         this.setCurrentPage(pageNum);
         const startIndex =(pageNum-1)*this.state.pageSize;
         this.setpaginatedProduct(this.state.products,startIndex);
-        this.state.paginatePages = _(this.state.pages).slice(pageNum-1).take(4).value();
         
     }
     
@@ -141,7 +123,7 @@ class ProductComponent extends React.Component{
                         }
                         {
                            
-                            this.state.paginatePages.map((page) => (
+                            this.state.pages.map((page) => (
                                 <li 
                                     className={
                                         page===this.state.currentPage? "page-item active":"page-item"

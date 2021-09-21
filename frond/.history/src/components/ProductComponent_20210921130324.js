@@ -30,6 +30,8 @@ class ProductComponent extends React.Component{
             this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage-1).take(4).value();
         }
         else if(this.state.currentPage==1){
+            console.log(this.state.currentPage);
+            const startIndex =0;
             this.setpaginatedProduct(this.state.products,0);
             this.state.paginatePages = _(this.state.pages).slice(0).take(4).value();
         }
