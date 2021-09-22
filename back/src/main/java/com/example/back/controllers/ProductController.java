@@ -35,6 +35,11 @@ public class ProductController {
 	public List<ProductDTO> readAll() {
 		return repository.findAll();
 	}
+	
+	@GetMapping("/productActive")
+	public List<ProductDTO> readAllActive() {
+		return repository.findProductByActive("Active");
+	}
 
 	@PutMapping("/product/{id}")
 	public ProductDTO update(@PathVariable String id, @Validated @RequestBody ProductDTO p) {

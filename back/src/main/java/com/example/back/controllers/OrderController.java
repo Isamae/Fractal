@@ -80,6 +80,7 @@ public class OrderController {
 
 	@PutMapping("/order/{id}")
 	public OrderDTO update(@PathVariable String id, @Validated @RequestBody OrderDTO o) {
+		o.setOrder_status(status.Completed);
 		return repository.save(o);
 	}
 	
@@ -118,7 +119,9 @@ public class OrderController {
 	
 	@DeleteMapping("/order/{id}")
 	public void delete(@PathVariable String id) {
-		repository.deleteById(id);
+		OrderDTO orderDTO = repository.findById(id).get();
+		orderDTO.setOrder_status(status.Completed);
+		repository.save(orderDTO);
 	}
 	
 	@PostMapping("/order/{id}/editItem")

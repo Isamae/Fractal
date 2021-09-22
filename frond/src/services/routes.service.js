@@ -6,6 +6,10 @@ class Routes{
         return http.get("/products/");
     }
 
+    getAllProductsByActive(){
+        return http.get("/products/productActive");
+    }
+
     createProduct(data) {
         return http.post("/products/product", data);
     }

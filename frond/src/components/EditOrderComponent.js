@@ -61,7 +61,7 @@ class EditOrder extends Component {
     handleShow = () => this.setShow(true);
 
     getProducts(){
-        Routes.getAllProducts()
+        Routes.getAllProductsByActive()
           .then(response => {
                 this.setState({
                     products: response.data,
