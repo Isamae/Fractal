@@ -65,8 +65,6 @@ class EditOrder extends Component {
           .then(response => {
                 this.setState({
                     products: response.data,
-                },() => {
-                    console.log(this.state.products)
                 });
           })
           .catch(e => {
@@ -140,11 +138,9 @@ class EditOrder extends Component {
     }
 
     deleteProduct(id_product){
-        console.log(id_product);
         var data = {
             id : id_product,
         };
-        console.log(data);
         Routes.deleteItemOrder(this.state.currentOrder._id, data)
         .then(response => {
             this.setState({
@@ -159,17 +155,16 @@ class EditOrder extends Component {
 
     getOrder(id) {
         Routes.getOrder(id)
-          .then(response => {
-            console.log(response.data)
-                this.setState({
-                    currentOrder: response.data,
-                },() => {
-                    console.log(response.data)
-                });
-          })
-          .catch(e => {
+        .then(response => {
+            this.setState({
+                currentOrder: response.data,
+            },() => {
+                console.log(response.data)
+            });
+        })
+        .catch(e => {
             console.log(e);
-          });
+        });
     }
 
     onChangeAmount(e){
@@ -187,7 +182,6 @@ class EditOrder extends Component {
     updateOrder() {
         Routes.updateOrder(this.state.currentOrder._id,this.state.currentOrder)
         .then(response => {
-            console.log(response.data);
             this.setState({
                 message: "The order was updated successfully!"
             });

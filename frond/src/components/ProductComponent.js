@@ -27,10 +27,10 @@ class ProductComponent extends React.Component{
             this.setCurrentPage(this.state.currentPage-1);
             const startIndex =(this.state.currentPage-2)*this.state.pageSize;
             this.setpaginatedProduct(this.state.products,startIndex);
-            this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage-2).take(4).value();
+            this.setState({
+                paginatePages : _(this.state.pages).slice(this.state.currentPage-2).take(4).value()
+            })
         }
-      
-      
     }
 
     next(){
@@ -39,7 +39,9 @@ class ProductComponent extends React.Component{
             this.setCurrentPage(this.state.currentPage+1);
             const startIndex =(this.state.currentPage)*this.state.pageSize;
             this.setpaginatedProduct(this.state.products,startIndex);
-            this.state.paginatePages = _(this.state.pages).slice(this.state.currentPage).take(4).value();
+            this.setState({
+                paginatePages:_(this.state.pages).slice(this.state.currentPage).take(4).value()
+            })
         }
     }
 
@@ -48,13 +50,18 @@ class ProductComponent extends React.Component{
             response => {
                 this.setState({
                     products: response.data,
-                    
                 }) ;
-                this.state.pageCount = this.state.products? Math.ceil(this.state.products.length/this.state.pageSize): 0;
+                this.setState({
+                    pageCount:this.state.products? Math.ceil(this.state.products.length/this.state.pageSize): 0
+                })
 
                 if(this.state.pageCount!==1){
-                        this.state.pages = _.range(1,this.state.pageCount+1);
-                        this.state.paginatePages = _(this.state.pages).slice(this.currentPage).take(4).value();
+                    this.setState({
+                        pages : _.range(1,this.state.pageCount+1)
+                    })
+                    this.setState({
+                        paginatePages:_(this.state.pages).slice(this.currentPage).take(4).value()
+                    })
                 }
 
                 this.setpaginatedProduct(this.state.products, 0);
@@ -74,8 +81,9 @@ class ProductComponent extends React.Component{
         this.setCurrentPage(pageNum);
         const startIndex =(pageNum-1)*this.state.pageSize;
         this.setpaginatedProduct(this.state.products,startIndex);
-        this.state.paginatePages = _(this.state.pages).slice(pageNum-1).take(4).value();
-        
+        this.setState({
+            paginatePages : _(this.state.pages).slice(pageNum-1).take(4).value()
+        })
     }
     
     setCurrentPage(pageNum){
@@ -134,7 +142,7 @@ class ProductComponent extends React.Component{
                 <nav className="d-flex justify-content-right">
                     <ul className="pagination">
                         {
-                             <li  onClick={()=>this.prev()}>
+                             <li  onClick={()=>this.prev()} id="prev">
                                 <p className="page-link">Prev </p>
                             </li>
                         }
@@ -145,6 +153,7 @@ class ProductComponent extends React.Component{
                                     className={
                                         page===this.state.currentPage? "page-item active":"page-item"
                                     }
+                                    id={page}
                                     onClick={()=>this.pagination(page)}
 
                                 >
@@ -154,7 +163,7 @@ class ProductComponent extends React.Component{
                             ))
                         }
                         {
-                            <li  onClick={()=>this.next()}>
+                            <li  onClick={()=>this.next()} id="next">
                                 <p className="page-link">Next </p>
                             </li>
                         }
