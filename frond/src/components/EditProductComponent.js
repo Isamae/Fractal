@@ -91,14 +91,13 @@ class EditProduct extends Component {
 
     onChangePrice(e) {
         const unit_price= e.target.value;
-        this.setState(function(prevState) {
-            return {
-                currentProduct: {
-                    ...prevState.currentProduct,
-                    unit_price: unit_price
-                }
-            };
-        });
+        this.setState(prevState => ({
+            currentProduct: {
+                ...prevState.currentProduct,
+                unit_price: unit_price
+            }
+            
+        }));
     }
 
     onChangeStatus(e) {
@@ -136,7 +135,6 @@ class EditProduct extends Component {
     }
 
     deleteProduct() {
-    
         Routes.deleteProduct(this.state.currentProduct._id).then(
             response=>{
                 this.props.history.push('/products');

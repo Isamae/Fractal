@@ -22,7 +22,7 @@ class EditOrder extends Component {
             amount:0,
             products:[],
             nameProduct:"",
-            productSelected:null,
+            productSelected:{},
             currentOrder:{
                 _id: null,
                 order_number: 0,
@@ -73,6 +73,30 @@ class EditOrder extends Component {
     }
 
     addProduct(){ 
+        /*
+
+        codigo para modificar el estado en el frond
+        
+        ar product_add = {};
+        this.state.products.forEach(product => {
+            if(product._id === this.state.productSelected ){
+                product_add[product._id] = product;
+            }
+        })
+        1) alternativa
+        this.setState(prevState => ({
+            currentProduct: {
+                ...prevState.currentProduct,
+                    itemsProduct:{...prevState.currentOrder.itemsProduct, ...product_add}
+            }
+        }));
+
+        2) alternatova
+        const newProduct = { ...this.state.currentOrder.itemsProduct, ...product_add };
+        const newCurrentOrder = { ...this.state.currentOrder, itemsProduct : newProduct };
+        this.setState({ currentOrder : newCurrentOrder });*/
+        
+
         var data = {
             _id: this.state.productSelected,
             amount: this.state.amount,

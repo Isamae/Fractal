@@ -70,15 +70,10 @@ class AddOrder extends Component {
         });
     }
 
-    onChangeConsumer(e){
-        const name = e.target.value
-        this.setState(function(prevState) {
-            return {
-                consumer: {
-                    ...prevState.consumer,
-                    name: name
-                }
-            };
+    onChangeConsumer(e){ 
+        this.setState({
+            consumer: {...this.state.consumer,name:e.target.value}
+            
         });
     }
 
