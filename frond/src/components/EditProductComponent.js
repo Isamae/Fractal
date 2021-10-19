@@ -150,7 +150,7 @@ class EditProduct extends Component {
 
                     <div className="edit-form ">
                         <form className="d-flex justify-content-center">
-                            <div className="col-4 ">
+                            <div className="col-md-4 ">
                                 <div className="form-group">
                                     <label htmlFor="name">Name</label>
                                     <input
@@ -210,7 +210,7 @@ class EditProduct extends Component {
                                     {errors.active && <p>{errors.active}</p> }
                                 </div>
                                 <button
-                                    className="btn btn-success m-2 "
+                                    className="btn btn-danger m-2 "
                                     onClick={this.deleteProduct}
                                     type="button"
                                     >

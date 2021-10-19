@@ -242,8 +242,8 @@ class EditOrder extends Component {
 
                 </div>
 
-                <div className="row m-4">
-                    <div className="col-2">
+                <div className="row m-2">
+                    <div className="col-4 col-md-2 col-lg-2">
                         <div className="mb-3 mt-2">
                             <h5>Customer:</h5>
                         </div>
@@ -254,7 +254,7 @@ class EditOrder extends Component {
                             <h5>Date : </h5>
                         </div>
                     </div>
-                    <div className="col-9">
+                    <div className="col-7 col-md-9 col-lg-9">
                         <div className="mb-3 mt-2">
                             <h5>{currentOrder.consumer.name}</h5>
                         </div>
@@ -318,65 +318,65 @@ class EditOrder extends Component {
                     </div>            
                 </div>
                 <div className="row mt-4">
-                    <div className="col-3 offset-md-9">
+                    <div className="col-md-3 col-lg-3 offset-md-9">
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-md-6 col-lg-6">
                                 <h5>Subtotal</h5>
                             </div>
-                            <div className="col-6 d-flex justify-content-end">
+                            <div className="col-md-6 col-lg-6 d-flex justify-content-end">
                                 <h5>&#36;{currentOrder.sub_total}</h5>
                             </div>
-                            <div className="col-6">
+                            <div className="col-md-6 col-lg-6">
                                 <h5>Taxes</h5>
                             </div>
                         </div>
                         <div className="row ms-1">
-                            <div className="col-7">
+                            <div className="col-md-7 col-lg-7">
                                 <h6>Total City Tax:</h6>
                             </div>
-                            <div className="col-5 d-flex justify-content-end">
+                            <div className="col-md-5 col-lg-5 d-flex justify-content-end">
                                 <h6>&#36;{currentOrder.taxes_amounts.City_Tax}</h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-md-7 col-lg-7">
                                 <h6>Total Country Tax:</h6>
                             </div>
-                            <div className="col-5 d-flex justify-content-end">
+                            <div className="col-md-5 col-lg-5 d-flex justify-content-end">
                                 <h6>&#36;{currentOrder.taxes_amounts.Country_Tax}</h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-md-7 col-lg-7">
                                 <h6>Total State Tax:</h6>
                             </div>
-                            <div className="col-5 d-flex justify-content-end">
+                            <div className="col-md-5 col-lg-5 d-flex justify-content-end">
                                 <h6>&#36;{currentOrder.taxes_amounts.Federal_Tax}</h6>
                             </div>
-                            <div className="col-7">
+                            <div className="col-md-7 col-lg-7">
                                 <h6>Total Federal Tax:</h6>
                             </div>
-                            <div className="col-5 d-flex justify-content-end">
+                            <div className="col-md-5 col-lg-5 d-flex justify-content-end">
                                 <h6>&#36;{currentOrder.taxes_amounts.State_Tax}</h6>
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-md-6 col-lg-6">
                                 <h5>Total Taxes</h5>
                             </div>
-                            <div className="col-6 d-flex justify-content-end">
+                            <div className="col-md-6 col-lg-6 d-flex justify-content-end">
                                 <h5>&#36;{currentOrder.total_taxes}</h5>
                             </div>
                         </div>
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-md-6 col-lg-6">
                                 <h5>Total</h5>
                             </div>
-                            <div className="col-6 d-flex justify-content-end">
+                            <div className="col-md-6 col-lg-6 d-flex justify-content-end">
                                 <h5>&#36;{currentOrder.total_amount}</h5>
                             </div>
                         </div>
-                        <div className="row">
-                            <div className="col-6 m-0 p-0">
+                        <div className="row m-1">
+                            <div className="col-6 col-md-6 col-lg-6 m-0 p-0">
                                 <button onClick={this.updateOrder} type="button" className="btn btn-success">Complete Order</button>
                             </div>
-                            <div className="col-6 d-flex justify-content-end m-0 p-0">
+                            <div className="col-6 col-md-6 col-lg-6 d-flex justify-content-end m-0 p-0">
                                 <button onClick={this.deleteOrder} type="button" className="btn btn-danger">Reject Order</button>
                             </div>
                         </div>

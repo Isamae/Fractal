@@ -170,7 +170,7 @@ class AddOrder extends Component {
                         </button>
                     </div>
                     ) : (
-                    <div className="col-4 ">
+                    <div className="col-10 col-md-4 ">
                         <div className="form-group">
                             <select className="form-select"
                                 id="consumer"

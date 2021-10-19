@@ -127,7 +127,7 @@ class AddProduct extends Component {
                         </button>
                     </div>
                     ) : (
-                    <div className="col-4 ">
+                    <div className="col-10 col-md-4 ">
                         <div className="form-group">
                             <label htmlFor="name">Name</label>
                             <input
