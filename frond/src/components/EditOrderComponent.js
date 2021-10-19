@@ -62,14 +62,14 @@ class EditOrder extends Component {
 
     getProducts(){
         Routes.getAllProductsByActive()
-          .then(response => {
-                this.setState({
-                    products: response.data,
-                });
-          })
-          .catch(e => {
-            console.log(e);
-          });
+        .then(response => {
+            this.setState({
+                products: response.data,
+            });
+        })
+        .catch(e => {
+        console.log(e);
+        });
     }
 
     addProduct(){ 
@@ -112,7 +112,6 @@ class EditOrder extends Component {
         .catch(e => {
             console.log(e);
         });
-
     }
 
     setProduct(){
@@ -146,7 +145,6 @@ class EditOrder extends Component {
                     productSelected : product._id,
                     editItem : true,
                     nameProduct: product.name
-        
                 });
             }
         })
@@ -219,7 +217,6 @@ class EditOrder extends Component {
         Routes.deleteOrder(this.state.currentOrder._id).then(
             response=>{
                 this.props.history.push('/orders');
-                console.log(response);
             }
         ).catch(e => {
             console.log(e)
@@ -287,7 +284,7 @@ class EditOrder extends Component {
                                 {
                                     Object.keys(currentOrder.itemsAmount).map(
                                         (item, index) =>
-                                        <tr key = {item}>
+                                        <tr key={item}>
                                             <td>{index+1}</td>
                                             <td>{currentOrder.itemsProduct[item].name }</td>
                                             <td>{Object.values(currentOrder.itemsAmount)[index]}</td>
@@ -423,18 +420,15 @@ class EditOrder extends Component {
                                             {
                                                 products.map(
                                                     (product) =>
-                                                    <option value={product._id}>{product.name}</option>
+                                                    <option key={product._id} value={product._id}>{product.name}</option>
                                                 )
                                             }
-                                        
                                         </select>
                                     </div>
                                     ):( <h4>Name: {nameProduct}</h4>)
                                 }
-                                
                                 {
                                     editItem ? (<button onClick={this.setProduct} className="btn btn-success mt-4">Edit Product</button>):(<button onClick={this.addProduct} className="btn btn-success mt-4">Add Product</button>)
-
                                 }
                                 
                             </Modal.Body>

@@ -42,7 +42,6 @@ class EditProduct extends Component {
                 unit_price: 0,
                 active: "",
             },
-            message: "",
             redirect:false
         };
     }    
@@ -61,7 +60,6 @@ class EditProduct extends Component {
         })
         .catch(e => {
             console.log(e);
-            this.props.history.push('/products');
         });
       }
 
@@ -121,10 +119,7 @@ class EditProduct extends Component {
         if(!Object.keys(result).length){
             Routes.updateProduct(this.state.currentProduct._id,this.state.currentProduct)
             .then(response => {
-                console.log(response.data);
-                this.setState({
-                message: "The product was updated successfully!"
-                });
+                this.props.history.push('/products');
             })
             .catch(e => {
                 console.log(e);
@@ -138,7 +133,6 @@ class EditProduct extends Component {
         Routes.deleteProduct(this.state.currentProduct._id).then(
             response=>{
                 this.props.history.push('/products');
-                console.log(response);
             }
         ).catch(e => {
             console.log(e);
@@ -146,7 +140,7 @@ class EditProduct extends Component {
     }
 
     render() {
-        const { currentProduct,errors } = this.state;
+        const { currentProduct,errors} = this.state;
         return (
             <div className="container ">
                 
@@ -164,7 +158,7 @@ class EditProduct extends Component {
                                         className="form-control"
                                         id="name"
                                         required
-                                        value={this.state.currentProduct.name}
+                                        value={currentProduct.name}
                                         onChange={this.onChangeName}
                                         name="name"
                                     />
@@ -178,7 +172,7 @@ class EditProduct extends Component {
                                         className="form-control"
                                         id="unit_price"
                                         required
-                                        value={this.state.currentProduct.unit_price}
+                                        value={currentProduct.unit_price}
                                         onChange={this.onChangePrice}
                                         name="unit_price"
                                     />
@@ -190,15 +184,14 @@ class EditProduct extends Component {
                                     <select className="form-select"
                                         id="category"
                                         required
-                                        value={this.state.currentProduct.product_category}
+                                        value={currentProduct.product_category}
                                         onChange={this.onChangeCategory}
                                         name="category">
-                                        <option selected>Category</option>
-                                        <option value="Cookies">Cookies</option>
-                                        <option value="Candies">Candies</option>
-                                        <option value="Cakes">Cakes</option>
-                                        <option value="Desserts">Desserts</option>
-                                        <option value="Drinks">Drinks</option>
+                                        <option key="Cookies" value="Cookies">Cookies</option>
+                                        <option key="Candies" value="Candies">Candies</option>
+                                        <option key="Cakes" value="Cakes">Cakes</option>
+                                        <option key="Desserts" value="Desserts">Desserts</option>
+                                        <option key="Drinks" value="Drinks">Drinks</option>
                                     </select>
                                     {errors.product_category && <p>{errors.product_category}</p> }
                                 </div>
@@ -208,24 +201,24 @@ class EditProduct extends Component {
                                     <select className="form-select"
                                         id="active"
                                         required
-                                        value={this.state.currentProduct.active}
+                                        value={currentProduct.active}
                                         onChange={this.onChangeStatus}
                                         name="active">
-                                        <option selected>Status</option>
-                                        <option value="Active">Active</option>
-                                        <option value="Inactive">Inactive</option>
+                                        <option key="Active" value="Active">Active</option>
+                                        <option key="Inactive" value="Inactive">Inactive</option>
                                     </select>
                                     {errors.active && <p>{errors.active}</p> }
                                 </div>
                                 <button
                                     className="btn btn-success m-2 "
                                     onClick={this.deleteProduct}
+                                    type="button"
                                     >
                                     Delete
                                 </button>
 
                                 <button
-                                    type="submit"
+                                    type="button"
                                     className="btn btn-success m-2"
                                     onClick={this.updateProduct}
                                     >
@@ -233,7 +226,6 @@ class EditProduct extends Component {
                                 </button>
                             </div>
                         </form>
-                        <p>{this.state.message}</p>
                     </div>
                     ) : (
                     <div>

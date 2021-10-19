@@ -4,6 +4,7 @@ package com.example.back.controllers;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -24,6 +25,7 @@ import com.example.back.models.ConsumerDTO;
 import com.example.back.models.OrderDTO;
 import com.example.back.models.ProductDTO;
 import com.example.back.models.status;
+import com.example.back.repositories.ConsumerDAO;
 import com.example.back.repositories.OrderDAO;
 import com.example.back.repositories.ProductDAO;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,8 +40,11 @@ public class OrderController {
 
 	@Autowired
 	private OrderDAO repository;
-	@Resource
+	@Autowired
 	private ProductDAO repositoryProductDAO;
+	
+	@Autowired
+	private ConsumerDAO consumerDAO;
 
 	@PostMapping("/order")
 	public OrderDTO create(@Validated @RequestBody String json) {
@@ -50,14 +55,11 @@ public class OrderController {
 			
 			JsonNode jsonNode = objectMapper.readTree(json);
 			OrderDTO orderDTO = new OrderDTO();
-			ConsumerDTO consumerDTO = new ConsumerDTO();
-			
-			consumerDTO.set_id(jsonNode.get("consumer").get("_id").asText());
-			consumerDTO.setName(jsonNode.get("consumer").get("name").asText());
+			ConsumerDTO consumerDTO = consumerDAO.findById(jsonNode.get("consumer").get("_id").asText()).get();
 			
 			orderDTO.setConsumer(consumerDTO);
-			orderDTO.setOrder_number(jsonNode.get("order_number").asInt());
-			orderDTO.setOrder_status(status.valueOf(jsonNode.get("order_status").asText()));
+			orderDTO.setOrder_number(Integer.parseInt(generateRandomNum(9)));
+			orderDTO.setOrder_status(status.Pending);
 			
 			return repository.insert(orderDTO);
 			
@@ -71,6 +73,11 @@ public class OrderController {
 		
 		return repository.findAll();
 		
+	}
+	
+	@GetMapping("/all")
+	public String allAccess() {
+		return "Public Content.";
 	}
 	
 	@GetMapping("/order/dato/{id}")
@@ -178,6 +185,13 @@ public class OrderController {
 	    
 	}
 	
-		
+	public static String generateRandomNum(int len) {
+		String chars = "0123456789";
+		Random rnd = new Random();
+		StringBuilder sb = new StringBuilder(len);
+		for (int i = 0; i < len; i++)
+			sb.append(chars.charAt(rnd.nextInt(chars.length())));
+		return sb.toString();
+	}	
 	
 }

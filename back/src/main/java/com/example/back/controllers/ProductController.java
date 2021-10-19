@@ -53,7 +53,10 @@ public class ProductController {
 	
 	@DeleteMapping("/product/{id}")
 	public void delete(@PathVariable String id) {
-		repository.deleteById(id);
+		System.out.println("Estoy eliminando");
+		ProductDTO p = repository.findById(id).get();
+		p.setActive("Inactive");
+		repository.save(p);
 	}
 	
 }

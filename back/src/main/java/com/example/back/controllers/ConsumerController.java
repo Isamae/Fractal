@@ -1,6 +1,8 @@
 package com.example.back.controllers;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,5 +35,9 @@ public class ConsumerController {
 		return repository.findById(id).get();
 	}
 	
+	@GetMapping("/")
+	public List<ConsumerDTO> getAll() {
+		return repository.findAll();
+	}
 
 }

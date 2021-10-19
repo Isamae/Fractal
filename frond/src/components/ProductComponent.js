@@ -1,13 +1,13 @@
-import React from "react";
+import React,{ Component } from "react";
 import { Link } from "react-router-dom";
 import Routes from "../services/routes.service";
-import _  from "lodash";
+import _ from "lodash";
 
-class ProductComponent extends React.Component{
+class ProductComponent extends Component{
     constructor(props){
         super(props)
-        this.state = {
-            products: [],
+        this.state ={
+            products:[],
             paginateProduct : [],
             pageCount:0,
             pages : [1],
@@ -16,25 +16,23 @@ class ProductComponent extends React.Component{
             pageSize: 2
         }
     }
-
+    
     componentDidMount(){
         this.getProducts();
     }
-    
+
     prev(){
-        
-        if(this.state.currentPage>1 && this.state.currentPage<=this.state.pageCount){
+        if(this.state.currentPage > 1 && this.state.currentPage <= this.state.pageCount){
             this.setCurrentPage(this.state.currentPage-1);
             const startIndex =(this.state.currentPage-2)*this.state.pageSize;
             this.setpaginatedProduct(this.state.products,startIndex);
             this.setState({
-                paginatePages : _(this.state.pages).slice(this.state.currentPage-2).take(4).value()
-            })
+                paginatePages:_(this.state.pages).slice(this.state.currentPage-2).take(4).value()
+            });
         }
     }
 
     next(){
-       
         if(this.state.currentPage>0 && this.state.currentPage+1<=this.state.pageCount){
             this.setCurrentPage(this.state.currentPage+1);
             const startIndex =(this.state.currentPage)*this.state.pageSize;
@@ -45,19 +43,37 @@ class ProductComponent extends React.Component{
         }
     }
 
+    pagination(pageNum){
+        this.setCurrentPage(pageNum);
+        const startIndex =(pageNum-1)*this.state.pageSize;
+        this.setpaginatedProduct(this.state.products,startIndex);
+        this.setState({
+            paginatePages:_(this.state.pages).slice(pageNum-1).take(4).value()
+        })
+    }
+    
+    setCurrentPage(pageNum){
+        this.setState({currentPage: pageNum});
+    }
+
+    setpaginatedProduct(data,start){
+        this.setState({paginateProduct: _(data).slice(start).take(this.state.pageSize).value() });
+    }
+
     getProducts(){
         Routes.getAllProducts().then(
             response => {
                 this.setState({
-                    products: response.data,
-                }) ;
+                    products: response.data
+                });
+
                 this.setState({
-                    pageCount:this.state.products? Math.ceil(this.state.products.length/this.state.pageSize): 0
+                    pageCount: this.state.products? Math.ceil(this.state.products.length/this.state.pageSize): 0
                 })
 
                 if(this.state.pageCount!==1){
                     this.setState({
-                        pages : _.range(1,this.state.pageCount+1)
+                        pages:_.range(1,this.state.pageCount+1)
                     })
                     this.setState({
                         paginatePages:_(this.state.pages).slice(this.currentPage).take(4).value()
@@ -67,31 +83,14 @@ class ProductComponent extends React.Component{
                 this.setpaginatedProduct(this.state.products, 0);
                 this.setCurrentPage(1);
             }
+            
         ).catch(e => {
             console.log(e);
         });
     }
 
-    setpaginatedProduct(data,start){
-        this.setState({paginateProduct: _(data).slice(start).take(this.state.pageSize).value() });
-
-    }
-
-    pagination(pageNum){
-        this.setCurrentPage(pageNum);
-        const startIndex =(pageNum-1)*this.state.pageSize;
-        this.setpaginatedProduct(this.state.products,startIndex);
-        this.setState({
-            paginatePages : _(this.state.pages).slice(pageNum-1).take(4).value()
-        })
-    }
-    
-    setCurrentPage(pageNum){
-        this.setState({currentPage: pageNum});
-    }
-
     render(){
-        const {paginateProduct } = this.state;
+        const {paginateProduct,currentPage,paginatePages} = this.state;
         return (
             <div  className="container ">
                 <div className="d-flex flex-row"><h1> Products</h1></div>
@@ -114,6 +113,7 @@ class ProductComponent extends React.Component{
                                     <td><strong>Status</strong></td>
                                     <td><strong>Actions</strong></td>
                                 </tr>
+
                             </thead>
                             <tbody>
                                 {
@@ -126,11 +126,11 @@ class ProductComponent extends React.Component{
                                             <td>{product.unit_price}</td>
                                             <td>{product.active}</td>
                                             <td>
-                                            <Link
-                                                to={"/products/product/"+product._id}
-                                            >
-                                                Edit
-                                            </Link>
+                                                <Link
+                                                    to={"/products/product/"+product._id}
+                                                >
+                                                    Edit
+                                                </Link>
                                             </td>
                                         </tr>
                                     )
@@ -147,15 +147,13 @@ class ProductComponent extends React.Component{
                             </li>
                         }
                         {
-                           
-                            this.state.paginatePages.map((page) => (
+                            paginatePages.map((page) => (
                                 <li 
                                     className={
-                                        page===this.state.currentPage? "page-item active":"page-item"
+                                        page===currentPage? "page-item active":"page-item"
                                     }
                                     id={page}
                                     onClick={()=>this.pagination(page)}
-
                                 >
                                     <p className="page-link"
                                     >{page} </p>

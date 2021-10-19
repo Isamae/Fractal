@@ -4,14 +4,6 @@ import Routes from "../services/routes.service";
 
 const validate = values => {
     const errors = {}
-
-    if(!values.order_number){
-        errors.order_number = "required field" 
-    }
-    if(values.order_status === ""){
-        errors.active = "required field" 
-    }
-
     if(values.consumer._id == null){
         errors.consumer = "consumer required field" 
     }
@@ -21,14 +13,15 @@ const validate = values => {
 class AddOrder extends Component {
     constructor(props) {
         super(props);
-        this.onChangeNumber = this.onChangeNumber.bind(this);
         this.onChangeConsumer = this.onChangeConsumer.bind(this);
-        this.onChangeStatus = this.onChangeStatus.bind(this);
+        this.onChangeConsumerName = this.onChangeConsumerName.bind(this);
         this.addConsumer = this.addConsumer.bind(this);
         this.saveOrder = this.saveOrder.bind(this);
         this.newOrder = this.newOrder.bind(this);
+        this.getAllConsumer = this.getAllConsumer.bind(this);
 
         this.state = {
+            consumers:[],
             errors : {},
             show:false,
             id: null,
@@ -47,6 +40,20 @@ class AddOrder extends Component {
         };
     }
 
+    componentDidMount() {
+        this.getAllConsumer();
+    }
+    getAllConsumer(){
+        Routes.getAllConsumer()
+        .then(response => {
+            this.setState({
+                consumers: response.data,
+            });
+        })
+        .catch(e => {
+        console.log(e);
+        });
+    }
     setShow(showModal){
         this.setState({
             show: showModal,
@@ -58,22 +65,15 @@ class AddOrder extends Component {
 
     handleShow = () => this.setShow(true);
 
-    onChangeNumber(e) {
-        this.setState({
-            order_number: e.target.value
-        });
-    }
-
-    onChangeStatus(e) {
-        this.setState({
-            order_status: e.target.value
-        });
-    }
-
-    onChangeConsumer(e){ 
+    onChangeConsumerName(e){ 
         this.setState({
             consumer: {...this.state.consumer,name:e.target.value}
-            
+        });
+    }
+
+    onChangeConsumer(e){
+        this.setState({
+            consumer: {...this.state.consumer,_id:e.target.value}
         });
     }
 
@@ -89,14 +89,14 @@ class AddOrder extends Component {
                     return {
                         consumer: {
                             ...prevState.consumer,
-                            _id: response.data._id,
-                            name:response.data.name
+                            _id: response.data._id
                         }
                     };
                 });
                 this.setState({
                     submittedConsumer : true
                 })
+                this.getAllConsumer();
             })
             .catch(e => {
                 console.log(e);
@@ -172,39 +172,27 @@ class AddOrder extends Component {
                     ) : (
                     <div className="col-4 ">
                         <div className="form-group">
-                            <label htmlFor="order_number">Number</label>
-                            <input
-                                type="number"
-                                className="form-control"
-                                id="order_number"
-                                required
-                                value={this.state.order_number}
-                                onChange={this.onChangeNumber}
-                                name="order_number"
-                            />
-                        </div>
-                        {errors.order_number && <p>{errors.order_number}</p> }
-                        <div className="form-group">
-                            <label htmlFor="active">Status</label>
                             <select className="form-select"
-                                id="active"
+                                id="consumer"
                                 required
-                                value={this.state.active}
-                                onChange={this.onChangeStatus}
-                                name="active">
-                                <option selected>Status</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Completed">Completed</option>
-                                <option value="Rejected">Rejected</option>
+                                value={this.state.consumer._id}
+                                onChange={this.onChangeConsumer}
+                                name="consumer">
+
+                                <option selected>Select Consumer</option>
+                                {
+                                    this.state.consumers.map(consumer =>
+                                        <option key={consumer._id} value={consumer._id}>{consumer.name}</option>
+                                    )
+                                }
                             </select>
-                            {errors.active && <p>{errors.active}</p> }
+                            {errors.consumer && <p>{errors.consumer}</p> }
                         </div>
                    
                         <button onClick={this.handleShow}className="btn btn-success m-1">Add Consumer</button>
                         <button onClick={this.saveOrder} className="btn btn-success  m-1">
                             Submit
                         </button>
-                        {errors.consumer && <p>{errors.consumer}</p> }
                     </div>
                     )}
                 </div>
@@ -228,7 +216,7 @@ class AddOrder extends Component {
                                     placeholder="Enter Consumer"
                                     required
                                     value={this.state.consumer.name}
-                                    onChange={this.onChangeConsumer}/>
+                                    onChange={this.onChangeConsumerName}/>
                                 </div>
                                 
                                 <button onClick={this.addConsumer} className="btn btn-success mt-4">Add Consumer</button>

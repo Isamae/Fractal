@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Routes from "../services/routes.service";
 import _ from "lodash";
 
-class ProductComponent extends React.Component{
+class OrderComponent extends React.Component{
     constructor(props){
         super(props)
         this.state ={
@@ -148,7 +148,6 @@ class ProductComponent extends React.Component{
                             </li>
                         }
                         {
-                           
                             this.state.paginatePages.map((page) => (
                                 <li 
                                     className={
@@ -175,4 +174,4 @@ class ProductComponent extends React.Component{
     }
 }
 
-export default ProductComponent
+export default OrderComponent

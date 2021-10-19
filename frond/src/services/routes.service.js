@@ -65,6 +65,10 @@ class Routes{
     createConsumer(data) {
         return http.post("/consumers/consumer", data);
     }
+
+    getAllConsumer() {
+        return http.get("/consumers/");
+    }
 }
 
 export default new Routes();

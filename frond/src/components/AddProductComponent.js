@@ -122,7 +122,7 @@ class AddProduct extends Component {
                     {this.state.submitted ? (
                     <div>
                         <h4>You submitted successfully!</h4>
-                        <button className="btn btn-success" onClick={this.newProduct}>
+                        <button type="button" className="btn btn-success" onClick={this.newProduct}>
                             Add
                         </button>
                     </div>
