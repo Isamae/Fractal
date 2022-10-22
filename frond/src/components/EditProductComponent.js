@@ -61,7 +61,7 @@ class EditProduct extends Component {
         .catch(e => {
             console.log(e);
         });
-      }
+    }
 
     onChangeName(e) {
         const name = e.target.value

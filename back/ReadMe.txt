@@ -1,0 +1,1 @@
+Para corre necesitos el ide de Spring Boot y correr la aplicación como Spring Boot App
