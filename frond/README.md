@@ -32,7 +32,7 @@ npm i lodash
 ### Back
 Spring Boot
 ### Frond
-React, MongoDB
+React, MongoDB:
     npm start -- (para correr el frond)
 
 ## Description
